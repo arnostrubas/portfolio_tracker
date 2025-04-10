@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -19,5 +20,24 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        Repeat();
+    }
+
+    private async void Button_Click(object sender, RoutedEventArgs e)
+    {
+        TextBlock.Text = await Test.Price("AAPL");
+    }
+
+    private async void Button_Click_1(object sender, RoutedEventArgs e)
+    {
+        TextBlock.Text = await Test.Price("GOOGL"); ;
+    }
+
+    private async void Repeat()
+    {
+        while (true)
+        {
+            TextBlock.Text = await Test.Price("GOOGL");
+        }
     }
 }

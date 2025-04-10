@@ -18,3 +18,30 @@ C:\Users\arnos\Desktop\Programování\C#\PV178\Portfolio tracker\PortfolioTracke
 C:\Users\arnos\Desktop\Programování\C#\PV178\Portfolio tracker\PortfolioTracker\obj\Debug\net9.0-windows\PortfolioTracker.pdb
 C:\Users\arnos\Desktop\Programování\C#\PV178\Portfolio tracker\PortfolioTracker\obj\Debug\net9.0-windows\PortfolioTracker.genruntimeconfig.cache
 C:\Users\arnos\Desktop\Programování\C#\PV178\Portfolio tracker\PortfolioTracker\obj\Debug\net9.0-windows\ref\PortfolioTracker.dll
+C:\Users\arnos\Documents\Osobní\Programování\pv178-project\PortfolioTracker\bin\Debug\net9.0-windows\PortfolioTracker.exe
+C:\Users\arnos\Documents\Osobní\Programování\pv178-project\PortfolioTracker\bin\Debug\net9.0-windows\PortfolioTracker.deps.json
+C:\Users\arnos\Documents\Osobní\Programování\pv178-project\PortfolioTracker\bin\Debug\net9.0-windows\PortfolioTracker.runtimeconfig.json
+C:\Users\arnos\Documents\Osobní\Programování\pv178-project\PortfolioTracker\bin\Debug\net9.0-windows\PortfolioTracker.dll
+C:\Users\arnos\Documents\Osobní\Programování\pv178-project\PortfolioTracker\bin\Debug\net9.0-windows\PortfolioTracker.pdb
+C:\Users\arnos\Documents\Osobní\Programování\pv178-project\PortfolioTracker\obj\Debug\net9.0-windows\MainWindow.g.cs
+C:\Users\arnos\Documents\Osobní\Programování\pv178-project\PortfolioTracker\obj\Debug\net9.0-windows\App.g.cs
+C:\Users\arnos\Documents\Osobní\Programování\pv178-project\PortfolioTracker\obj\Debug\net9.0-windows\PortfolioTracker_MarkupCompile.cache
+C:\Users\arnos\Documents\Osobní\Programování\pv178-project\PortfolioTracker\obj\Debug\net9.0-windows\PortfolioTracker_MarkupCompile.lref
+C:\Users\arnos\Documents\Osobní\Programování\pv178-project\PortfolioTracker\obj\Debug\net9.0-windows\MainWindow.baml
+C:\Users\arnos\Documents\Osobní\Programování\pv178-project\PortfolioTracker\obj\Debug\net9.0-windows\PortfolioTracker.g.resources
+C:\Users\arnos\Documents\Osobní\Programování\pv178-project\PortfolioTracker\obj\Debug\net9.0-windows\PortfolioTracker.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\arnos\Documents\Osobní\Programování\pv178-project\PortfolioTracker\obj\Debug\net9.0-windows\PortfolioTracker.AssemblyInfoInputs.cache
+C:\Users\arnos\Documents\Osobní\Programování\pv178-project\PortfolioTracker\obj\Debug\net9.0-windows\PortfolioTracker.AssemblyInfo.cs
+C:\Users\arnos\Documents\Osobní\Programování\pv178-project\PortfolioTracker\obj\Debug\net9.0-windows\PortfolioTracker.csproj.CoreCompileInputs.cache
+C:\Users\arnos\Documents\Osobní\Programování\pv178-project\PortfolioTracker\obj\Debug\net9.0-windows\PortfolioTracker.dll
+C:\Users\arnos\Documents\Osobní\Programování\pv178-project\PortfolioTracker\obj\Debug\net9.0-windows\refint\PortfolioTracker.dll
+C:\Users\arnos\Documents\Osobní\Programování\pv178-project\PortfolioTracker\obj\Debug\net9.0-windows\PortfolioTracker.pdb
+C:\Users\arnos\Documents\Osobní\Programování\pv178-project\PortfolioTracker\obj\Debug\net9.0-windows\PortfolioTracker.genruntimeconfig.cache
+C:\Users\arnos\Documents\Osobní\Programování\pv178-project\PortfolioTracker\obj\Debug\net9.0-windows\ref\PortfolioTracker.dll
+C:\Users\arnos\Documents\Osobní\Programování\pv178-project\PortfolioTracker\obj\Debug\net9.0-windows\PortfolioTracker.csproj.AssemblyReference.cache
+C:\Users\arnos\Documents\Osobní\Programování\pv178-project\PortfolioTracker\bin\Debug\net9.0-windows\CsvHelper.dll
+C:\Users\arnos\Documents\Osobní\Programování\pv178-project\PortfolioTracker\bin\Debug\net9.0-windows\Flurl.dll
+C:\Users\arnos\Documents\Osobní\Programování\pv178-project\PortfolioTracker\bin\Debug\net9.0-windows\Flurl.Http.dll
+C:\Users\arnos\Documents\Osobní\Programování\pv178-project\PortfolioTracker\bin\Debug\net9.0-windows\Newtonsoft.Json.dll
+C:\Users\arnos\Documents\Osobní\Programování\pv178-project\PortfolioTracker\bin\Debug\net9.0-windows\YahooFinanceApi.dll
+C:\Users\arnos\Documents\Osobní\Programování\pv178-project\PortfolioTracker\obj\Debug\net9.0-windows\Portfoli.8644464B.Up2Date

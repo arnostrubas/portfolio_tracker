@@ -8,4 +8,16 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="11037-chart-with-upwards-trend.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="11037-chart-with-upwards-trend.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="YahooFinanceApi" Version="2.3.3" />
+  </ItemGroup>
+
 </Project>
