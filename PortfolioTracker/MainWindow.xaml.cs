@@ -1,15 +1,5 @@
-﻿using System.Diagnostics;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using PortfolioTracker.Database;
 using PortfolioTracker.Models;
 
@@ -28,10 +18,10 @@ public partial class MainWindow : Window
 
     private async void A()
     {
-        var Data = new DataAccess();
-        string price = await Test.Price("AAPL");
+        var Data = new PortfolioManager("Portfolio");
+        string price = await Test.Price("GOOGL");
         float priceF = float.Parse(price);
-        Stock stock = new Stock("AAPL", priceF);
+        Stock stock = new Stock("GOOGL", priceF);
         Order order = new Order(stock, Enums.OrderType.Buy, 4, DateTime.Today);
         await Data.AddOrder(order);
         TextBlock.Text = "DONE";

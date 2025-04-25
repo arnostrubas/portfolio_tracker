@@ -8,9 +8,12 @@
     ".NETCoreApp,Version=v9.0": {
       "PortfolioTracker/1.0.0": {
         "dependencies": {
+          "Microsoft.Data.SqlClient": "5.1.6",
           "Microsoft.EntityFrameworkCore": "9.0.4",
           "Microsoft.EntityFrameworkCore.SqlServer": "9.0.4",
-          "YahooFinanceApi": "2.3.3"
+          "YahooFinanceApi": "2.3.3",
+          "Microsoft.Data.Tools.Schema.Sql.UnitTesting": "17.0.0.0",
+          "Microsoft.Data.Tools.Schema.Sql.UnitTestingAdapter": "17.0.0.0"
         },
         "runtime": {
           "PortfolioTracker.dll": {}
@@ -549,6 +552,22 @@
             "fileVersion": "0.0.0.0"
           }
         }
+      },
+      "Microsoft.Data.Tools.Schema.Sql.UnitTesting/17.0.0.0": {
+        "runtime": {
+          "Microsoft.Data.Tools.Schema.Sql.UnitTesting.dll": {
+            "assemblyVersion": "17.0.0.0",
+            "fileVersion": "17.13.3.1"
+          }
+        }
+      },
+      "Microsoft.Data.Tools.Schema.Sql.UnitTestingAdapter/17.0.0.0": {
+        "runtime": {
+          "Microsoft.Data.Tools.Schema.Sql.UnitTestingAdapter.dll": {
+            "assemblyVersion": "17.0.0.0",
+            "fileVersion": "17.13.3.1"
+          }
+        }
       }
     }
   },
@@ -977,6 +996,16 @@
       "sha512": "sha512-1ZwoNaJJJgRgjFkOoswrj+jw7VYzJjOsg8SKzVSafmDNbGy0+j6iS8WQseKsvLzipgkvkQn77pcBXmXfMGULsg==",
       "path": "yahoofinanceapi/2.3.3",
       "hashPath": "yahoofinanceapi.2.3.3.nupkg.sha512"
+    },
+    "Microsoft.Data.Tools.Schema.Sql.UnitTesting/17.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.Data.Tools.Schema.Sql.UnitTestingAdapter/17.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }
