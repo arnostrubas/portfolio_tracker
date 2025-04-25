@@ -6,29 +6,40 @@ using System.Threading.Tasks;
 using PortfolioTracker.Models;
 using PortfolioTracker;
 using System.Windows.Controls;
+using System.Windows.Navigation;
+using Microsoft.EntityFrameworkCore;
 
 namespace PortfolioTracker.Database
 {
     public class PortfolioManager
     {
-        private Portfolio portfolio;
-        portfolioDbContext db;
+        private PortfolioManagerDbContext manager = new PortfolioManagerDbContext();
+        public Portfolio portfolio;
+        private portfolioDbContext db;
         public PortfolioManager(string portfolioName)
         {
-            this.portfolio = new Portfolio(portfolioName);
-            db = new portfolioDbContext(this.portfolio.ConnectionString);
-            AddDatabase();
+            var existing = manager.Portfolios.FirstOrDefault(p => p.Name == portfolioName);
+            if (existing != null) { this.portfolio = existing; }
+            else { 
+                portfolio = new Portfolio(portfolioName);
+                AddPortfolio(); 
+            }
+            this.db = new portfolioDbContext(this.portfolio.ConnectionString);
         }
 
-        private async void AddDatabase()
+        private async void AddPortfolio()
         {
-            using var manager = new PortfolioManagerDbContext();
-            await manager.Database.EnsureCreatedAsync();
             if (!manager.Portfolios.Any(portfolio => portfolio.Name == this.portfolio.Name))
             {
                 manager.Portfolios.Add(this.portfolio);
                 await manager.SaveChangesAsync();
             }
+        }
+
+        private async void RemovePortfolio()
+        {
+            manager.Portfolios.Remove(this.portfolio);
+            await manager.SaveChangesAsync();
         }
 
         public async Task AddOrder(Order order)

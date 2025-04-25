@@ -24,7 +24,7 @@ public partial class MainWindow : Window
         Stock stock = new Stock("GOOGL", priceF);
         Order order = new Order(stock, Enums.OrderType.Buy, 4, DateTime.Today);
         await Data.AddOrder(order);
-        TextBlock.Text = "DONE";
+        TextBlock.Text = Data.portfolio.NumberOfCompanies.ToString();
     }
     private async void Button_Click(object sender, RoutedEventArgs e)
     {
