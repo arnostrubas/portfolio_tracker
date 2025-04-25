@@ -10,8 +10,7 @@ namespace PortfolioTracker
                 var securities = await Yahoo.Symbols(ticker)
                     .Fields(Field.RegularMarketPrice)
                     .QueryAsync();
-                    var price = securities[ticker][Field.RegularMarketPrice];
-                    return $"{ticker} current price is: ${price}";
+                return $"{ticker} current price is: ${securities[ticker][Field.RegularMarketPrice]}";
         }
     }
 }

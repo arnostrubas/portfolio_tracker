@@ -20,7 +20,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        Repeat();
+        //Repeat();
     }
 
     private async void Button_Click(object sender, RoutedEventArgs e)
@@ -37,6 +37,7 @@ public partial class MainWindow : Window
     {
         while (true)
         {
+            await Task.Delay(2000);
             TextBlock.Text = await Test.Price("GOOGL");
         }
     }
