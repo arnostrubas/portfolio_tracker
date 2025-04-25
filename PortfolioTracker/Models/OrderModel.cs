@@ -10,13 +10,24 @@ using PortfolioTracker.Enums;
 namespace PortfolioTracker.Models
 {
     [Table("Portfolio")]
-    class OrderModel
+    public class Order
     {
-        public Stock stock;
+        public string ticker {  get; set; }
+        public float price { get; set; }
+        public float currentPrice { get; set; }
         public int Id { get; set; }
         public OrderType orderType { get; set; }
-        public int amout { get; set; }
+        public float amount { get; set; }
         public DateTime date { get; set; }
-        public int totalInvestment { get; private set; }
+        public Order() { }
+        public Order(Stock stock, OrderType orderType, float amount, DateTime date)
+        {
+            this.ticker = stock.ticker;
+            this.price = stock.price;
+            this.currentPrice = stock.currentPrice;
+            this.orderType = orderType;
+            this.amount = amount;
+            this.date = date;
+        }
     }
 }

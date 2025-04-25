@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,6 +10,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using PortfolioTracker.Database;
+using PortfolioTracker.Models;
 
 namespace PortfolioTracker;
 
@@ -20,9 +23,19 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        //Repeat();
+        A();
     }
 
+    private async void A()
+    {
+        var Data = new DataAccess();
+        string price = await Test.Price("AAPL");
+        float priceF = float.Parse(price);
+        Stock stock = new Stock("AAPL", priceF);
+        Order order = new Order(stock, Enums.OrderType.Buy, 4, DateTime.Today);
+        await Data.AddOrder(order);
+        TextBlock.Text = "DONE";
+    }
     private async void Button_Click(object sender, RoutedEventArgs e)
     {
         TextBlock.Text = await Test.Price("AAPL");

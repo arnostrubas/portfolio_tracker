@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace PortfolioTracker.Models
 {
-    class Stock
+    public class Stock
     {
         public string ticker { get; private set; }
-        public int price { get; private set; }
-        public int currentPrice { get; private set; }
-        public Stock(string ticker, int price)
+        public float price { get; private set; }
+        public float currentPrice { get; private set; }
+        public Stock(string ticker, float price)
         {
             this.ticker = ticker;
             this.price = price;
             this.currentPrice = price;
         }
-        public void UpdatePrice(int currentPrice)
+        public void UpdatePrice(float currentPrice)
         {
             this.currentPrice = currentPrice;
         }
