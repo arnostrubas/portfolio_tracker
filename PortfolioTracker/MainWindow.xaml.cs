@@ -18,15 +18,16 @@ public partial class MainWindow : Window
 
     private async void A()
     {
-        var Data = new PortfolioManager("Portfolio");
-        string price = await Test.Price("GOOGL");
+        var Data = new PortfolioManager("Babylon2aasa");
+        //await Data.CSVToDatabase("PortfolioExport.csv");
+        /*string price = await Test.Price("GOOGL");
         double priceF = double.Parse(price);
         Stock stock = new Stock("GOOGL", priceF);
         Order order = new Order(stock, 1, (float)4.0, DateTime.Today);
         await Data.AddOrder(order);
         var order1 = await Data.GetOrder(10);
         if (order1 != null) await Data.RemoveOrder(order1);
-        Data.RemovePortfolio();
+        await Data.DatabaseToCSV();*/
     }
     private async void Button_Click(object sender, RoutedEventArgs e)
     {

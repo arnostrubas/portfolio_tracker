@@ -10,6 +10,7 @@ using System.Windows.Navigation;
 using Microsoft.EntityFrameworkCore;
 using System.Windows.Media.Animation;
 using System.DirectoryServices;
+using System.IO;
 
 namespace PortfolioTracker.Database
 {
@@ -20,7 +21,7 @@ namespace PortfolioTracker.Database
     {
         private readonly PortfolioManagerDbContext manager = new ();
         public Portfolio portfolio;
-        public PortfolioDbContext portfolioDatabase = null!;
+        private PortfolioDbContext portfolioDatabase = null!;
 
         /// <summary>
         /// Constructor for PortfolioManager
@@ -85,6 +86,7 @@ namespace PortfolioTracker.Database
         /// <returns></returns>
         public async Task RemoveOrder(Order order)
         {
+            await portfolioDatabase.Database.EnsureCreatedAsync();
             if (order != null) {
                 portfolioDatabase.Orders.Remove(order);
                 await portfolioDatabase.SaveChangesAsync();
@@ -99,6 +101,52 @@ namespace PortfolioTracker.Database
         public async Task<Order?> GetOrder(int orderID)
         {
             return await portfolioDatabase.Orders.FirstOrDefaultAsync(p => p.Id == orderID);
+        }
+        /// <summary>
+        /// Exports portfolio into CSV
+        /// </summary>
+        /// <returns>Task which is exporting the data</returns>
+        public Task DatabaseToCSV() => Task.Run(async () =>
+        {
+            string exportPath = Path.Combine("..", "..", "..", "Export", this.portfolio.Name + "Export.csv");
+            var orders = await portfolioDatabase.Orders.ToListAsync();
+            var csv = new StringBuilder();
+
+            csv.AppendLine("Id;OrderType;Ticker;Amount;Date;Price;CurrentPrice");
+
+            foreach (var order in orders) {
+                csv.AppendLine($"{order.Id};{order.OrderType};{order.Ticker};{order.Amount};{order.Date:dd-MM-yyyy};{order.Price};{order.CurrentPrice}");
+            }
+            File.WriteAllText(exportPath, csv.ToString());
+        });
+
+        public Task CSVToDatabase(string fileName) => Task.Run(async () =>
+        {
+            string importPath = Path.Combine("..", "..", "..", "Export", fileName);
+            try
+            {
+                var csv = File.ReadLines(importPath);
+                foreach (var line in csv.Skip(1))
+                {
+                    if (line is not  null)
+                    {
+                        var order = CsvLineToOrder(line);
+                        await AddOrder(order);
+                    }
+                }
+            }
+            catch (Exception ex)  
+            {
+                throw new Exception("Import failed! " + ex.Message);
+            }
+        });
+
+        private static Order CsvLineToOrder(string line)
+        {
+            string[] parts = line.Split(';');
+            Stock stock = new(parts[2], double.Parse(parts[5]));
+            Order order = new(stock, int.Parse(parts[1]), double.Parse(parts[3]), DateTime.Parse(parts[4]));
+            return order;
         }
 
     }
