@@ -15,7 +15,7 @@ namespace PortfolioTracker.Database
     {
         private PortfolioManagerDbContext manager = new PortfolioManagerDbContext();
         public Portfolio portfolio;
-        private portfolioDbContext db;
+        public portfolioDbContext db;
         public PortfolioManager(string portfolioName)
         {
             var existing = manager.Portfolios.FirstOrDefault(p => p.Name == portfolioName);
@@ -47,6 +47,11 @@ namespace PortfolioTracker.Database
             await db.Database.EnsureCreatedAsync();
             db.Orders.Add(order);
             await db.SaveChangesAsync();
+        }
+
+        public async Task<Order?> GetOrder(int orderID)
+        {
+            return await db.Orders.FirstOrDefaultAsync(p => p.Id == orderID);
         }
     }
 }

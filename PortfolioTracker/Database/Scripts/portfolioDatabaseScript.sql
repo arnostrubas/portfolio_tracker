@@ -6,9 +6,9 @@ GO
 
 CREATE TABLE [dbo].Portfolio(
 	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[OrderType] [varchar](20),
+	[OrderType] [int],
 	[Ticker] [varchar](5),
-	[Amount] [int],
+	[Amount] [float],
 	[Date] [DATE], 
 	[Price] [float],
 	[CurrentPrice] [float]

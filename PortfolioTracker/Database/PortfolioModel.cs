@@ -10,9 +10,9 @@ namespace PortfolioTracker.Database
         public string Name { get; set; } = "";
         public string ConnectionString { get; set; } = "";
         public int NumberOfCompanies { get; set; } = 0;
-        public float Invested { get; set; } = 0;
-        public float CurrentValue { get; set; } = 0;
-        public float Profit { get; set; } = 0;
+        public double Invested { get; set; } = 0;
+        public double CurrentValue { get; set; } = 0;
+        public double Profit { get; set; } = 0;
         public Portfolio() { }
 
         public Portfolio(string name) 

@@ -20,11 +20,14 @@ public partial class MainWindow : Window
     {
         var Data = new PortfolioManager("Portfolio");
         string price = await Test.Price("GOOGL");
-        float priceF = float.Parse(price);
+        double priceF = double.Parse(price);
         Stock stock = new Stock("GOOGL", priceF);
-        Order order = new Order(stock, Enums.OrderType.Buy, 4, DateTime.Today);
-        await Data.AddOrder(order);
-        TextBlock.Text = Data.portfolio.NumberOfCompanies.ToString();
+        Order order = new Order(stock, 1, (float)4.0, DateTime.Today);
+        //await Data.AddOrder(order);
+        var text = await Data.GetOrder(1);
+        string r = "F";
+        if (text != null) r = text.Amount.ToString();
+        TextBlock.Text = r;
     }
     private async void Button_Click(object sender, RoutedEventArgs e)
     {
