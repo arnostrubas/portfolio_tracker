@@ -106,18 +106,26 @@ namespace PortfolioTracker.Database
         /// Exports portfolio into CSV
         /// </summary>
         /// <returns>Task which is exporting the data</returns>
-        public Task DatabaseToCSV() => Task.Run(async () =>
+        public void DatabaseToCSV() => Task.Run(async () =>
         {
-            string exportPath = Path.Combine("..", "..", "..", "Export", this.portfolio.Name + "Export.csv");
-            var orders = await portfolioDatabase.Orders.ToListAsync();
-            var csv = new StringBuilder();
+            try
+            {
+                string exportPath = Path.Combine("..", "..", "..", "Export", this.portfolio.Name + "Export.csv");
+                var orders = await portfolioDatabase.Orders.ToListAsync();
+                using var file = File.Create(exportPath);
+                using var csv = new StreamWriter(file);
 
-            csv.AppendLine("Id;OrderType;Ticker;Amount;Date;Price;CurrentPrice");
+                csv.WriteLine("Id;OrderType;Ticker;Amount;Date;Price;CurrentPrice");
 
-            foreach (var order in orders) {
-                csv.AppendLine($"{order.Id};{order.OrderType};{order.Ticker};{order.Amount};{order.Date:dd-MM-yyyy};{order.Price};{order.CurrentPrice}");
+                foreach (var order in orders)
+                {
+                    csv.WriteLine($"{order.Id};{order.OrderType};{order.Ticker};{order.Amount};{order.Date:dd-MM-yyyy};{order.Price};{order.CurrentPrice}");
+                }
             }
-            File.WriteAllText(exportPath, csv.ToString());
+            catch (Exception ex) 
+            { 
+                throw new Exception("Export failed! " + ex.Message);
+            }
         });
 
         /// <summary>
@@ -126,11 +134,11 @@ namespace PortfolioTracker.Database
         /// <param name="fileName">File from which the orders will be imported</param>
         /// <returns>Task performing the import</returns>
         /// <exception cref="Exception">Import failed + reason of exception</exception>
-        public Task CSVToDatabase(string fileName) => Task.Run(async () =>
+        public void CSVToDatabase(string fileName) => Task.Run(async () =>
         {
-            string importPath = Path.Combine("..", "..", "..", "Export", fileName);
             try
             {
+                string importPath = Path.Combine("..", "..", "..", "Export", fileName);
                 var csv = File.ReadLines(importPath);
                 foreach (var line in csv.Skip(1))
                 {

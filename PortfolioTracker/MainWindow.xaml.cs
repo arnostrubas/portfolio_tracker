@@ -18,8 +18,9 @@ public partial class MainWindow : Window
 
     private async void A()
     {
-        var Data = new PortfolioManager("Babylon2aasa");
-        //await Data.CSVToDatabase("PortfolioExport.csv");
+        var Data = new PortfolioManager("Portfolio");
+        await Task.Delay(500);
+        Data.DatabaseToCSV();
         /*string price = await Test.Price("GOOGL");
         double priceF = double.Parse(price);
         Stock stock = new Stock("GOOGL", priceF);
