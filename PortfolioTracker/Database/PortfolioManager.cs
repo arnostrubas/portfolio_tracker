@@ -120,6 +120,12 @@ namespace PortfolioTracker.Database
             File.WriteAllText(exportPath, csv.ToString());
         });
 
+        /// <summary>
+        /// Imports all data (that is not already in the database) into the database
+        /// </summary>
+        /// <param name="fileName">File from which the orders will be imported</param>
+        /// <returns>Task performing the import</returns>
+        /// <exception cref="Exception">Import failed + reason of exception</exception>
         public Task CSVToDatabase(string fileName) => Task.Run(async () =>
         {
             string importPath = Path.Combine("..", "..", "..", "Export", fileName);
@@ -141,12 +147,24 @@ namespace PortfolioTracker.Database
             }
         });
 
+        /// <summary>
+        /// Takes a csv string and converts it into order
+        /// </summary>
+        /// <param name="line">Line to be parsed</param>
+        /// <returns>Order parsed from the line</returns>
         private static Order CsvLineToOrder(string line)
         {
-            string[] parts = line.Split(';');
-            Stock stock = new(parts[2], double.Parse(parts[5]));
-            Order order = new(stock, int.Parse(parts[1]), double.Parse(parts[3]), DateTime.Parse(parts[4]));
-            return order;
+            try
+            {
+                string[] parts = line.Split(';');
+                Stock stock = new(parts[2], double.Parse(parts[5]));
+                Order order = new(stock, int.Parse(parts[1]), double.Parse(parts[3]), DateTime.Parse(parts[4]));
+                return order;
+            }
+            catch (Exception ex) 
+            { 
+                throw new Exception("Parsing failed! " + ex.Message); 
+            }
         }
 
     }

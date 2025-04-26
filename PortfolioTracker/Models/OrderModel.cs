@@ -27,7 +27,11 @@ namespace PortfolioTracker.Models
         {
             if (obj is not Order order) return false;
             return this.Ticker == order.Ticker && this.OrderType == order.OrderType && this.Amount == order.Amount && 
-                this.Date == order.Date && this.Date.Equals(order.Date);
+                this.Date == order.Date;
+        }
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Ticker, OrderType, Amount, Date);
         }
     }
 }
