@@ -23,5 +23,11 @@ namespace PortfolioTracker.Models
             this.Amount = amount;
             this.Date = date;
         }
+        public override bool Equals(object? obj)
+        {
+            if (obj is not Order order) return false;
+            return this.Ticker == order.Ticker && this.OrderType == order.OrderType && this.Amount == order.Amount && 
+                this.Date == order.Date && this.Date.Equals(order.Date);
+        }
     }
 }

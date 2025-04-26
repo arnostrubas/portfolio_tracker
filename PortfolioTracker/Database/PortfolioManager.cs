@@ -131,7 +131,7 @@ namespace PortfolioTracker.Database
                     if (line is not  null)
                     {
                         var order = CsvLineToOrder(line);
-                        await AddOrder(order);
+                        if (!portfolioDatabase.Orders.Any(p => p.Equals(order))) await AddOrder(order);
                     }
                 }
             }
