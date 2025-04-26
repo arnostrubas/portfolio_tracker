@@ -18,7 +18,7 @@ public partial class MainWindow : Window
 
     private async void A()
     {
-        var Data = new PortfolioManager("Portfolio");
+        var Data = new PortfolioManager("Portfolioo");
         string price = await Test.Price("GOOGL");
         double priceF = double.Parse(price);
         Stock stock = new Stock("GOOGL", priceF);
@@ -26,6 +26,7 @@ public partial class MainWindow : Window
         await Data.AddOrder(order);
         var order1 = await Data.GetOrder(10);
         if (order1 != null) await Data.RemoveOrder(order1);
+        Data.RemovePortfolio();
     }
     private async void Button_Click(object sender, RoutedEventArgs e)
     {

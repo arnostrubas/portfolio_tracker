@@ -13,11 +13,20 @@ using System.DirectoryServices;
 
 namespace PortfolioTracker.Database
 {
+    /// <summary>
+    /// Class that manages a single portfolio from PortfolioManager Database
+    /// </summary>
     public class PortfolioManager
     {
-        private PortfolioManagerDbContext manager = new PortfolioManagerDbContext();
+        private PortfolioManagerDbContext manager = new ();
         public Portfolio portfolio;
-        public portfolioDbContext db;
+        public PortfolioDbContext portfolioDatabase;
+
+        /// <summary>
+        /// Constructor for PortfolioManager
+        /// Manages a portfolio. If the portfolio doesnt exist, it creates a new empty one.
+        /// </summary>
+        /// <param name="portfolioName"> Name of the portfolio to be managed. </param>
         public PortfolioManager(string portfolioName)
         {
             var existing = manager.Portfolios.FirstOrDefault(p => p.Name == portfolioName);
@@ -29,42 +38,67 @@ namespace PortfolioTracker.Database
             CreateDb();
         }
 
+        /// <summary>
+        /// Creates a PortfolioDbContext and ensures database for the portfolio is created
+        /// </summary>
         private async void CreateDb()
         {
-            this.db = new portfolioDbContext(this.portfolio.ConnectionString);
-            await db.Database.EnsureCreatedAsync();
+            this.portfolioDatabase = new PortfolioDbContext(this.portfolio.ConnectionString);
+            await portfolioDatabase.Database.EnsureCreatedAsync();
         }
 
+        /// <summary>
+        /// Adds a portfolio to manager database (expects that the portfolio with the same name isnt in the database
+        /// Used only in constructor
+        /// </summary>
         private async void AddPortfolio()
         {
-            if (!manager.Portfolios.Any(portfolio => portfolio.Name == this.portfolio.Name))
-            {
-                manager.Portfolios.Add(this.portfolio);
-                await manager.SaveChangesAsync();
-            }
+            manager.Portfolios.Add(this.portfolio);
+            await manager.SaveChangesAsync();
         }
 
-        private async void RemovePortfolio()
+        /// <summary>
+        /// Removes a portfolio from the database.
+        /// Dispose manager after
+        /// </summary>
+        public async void RemovePortfolio()
         {
             manager.Portfolios.Remove(this.portfolio);
             await manager.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Adds an order to the database
+        /// </summary>
+        /// <param name="order">Order to be added</param>
+        /// <returns></returns>
         public async Task AddOrder(Order order)
         {
-            db.Orders.Add(order);
-            await db.SaveChangesAsync();
+            portfolioDatabase.Orders.Add(order);
+            await portfolioDatabase.SaveChangesAsync();
         }
         
+        /// <summary>
+        /// Removes a order from the database
+        /// </summary>
+        /// <param name="order">Order returned from GetOrder</param>
+        /// <returns></returns>
         public async Task RemoveOrder(Order order)
         {
-            db.Orders.Remove(order);
-            await db.SaveChangesAsync();
+            if (order != null) {
+                portfolioDatabase.Orders.Remove(order);
+                await portfolioDatabase.SaveChangesAsync();
+            }
         }
 
+        /// <summary>
+        /// Returns order with orderID or null
+        /// </summary>
+        /// <param name="orderID"></param>
+        /// <returns></returns>
         public async Task<Order?> GetOrder(int orderID)
         {
-            return await db.Orders.FirstOrDefaultAsync(p => p.Id == orderID);
+            return await portfolioDatabase.Orders.FirstOrDefaultAsync(p => p.Id == orderID);
         }
 
     }

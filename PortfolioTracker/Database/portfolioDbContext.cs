@@ -3,12 +3,12 @@ using PortfolioTracker.Models;
 
 namespace PortfolioTracker.Database
 {
-    public class portfolioDbContext : DbContext
+    public class PortfolioDbContext : DbContext
     {
         private string connectionString = "";
 
         public DbSet<Order> Orders { get; set; }
-        public portfolioDbContext(string connectionString) 
+        public PortfolioDbContext(string connectionString) 
         { 
             this.connectionString = connectionString;
         } 
