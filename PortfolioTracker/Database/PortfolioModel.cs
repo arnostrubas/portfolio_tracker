@@ -18,7 +18,7 @@ namespace PortfolioTracker.Database
         public Portfolio(string name) 
         {
             this.Name = name;
-            this.ConnectionString = GetConnectionString.getConnectionString(name);
+            this.ConnectionString = Database.ConnectionString.GetConnectionString(name);
         }
 
     }

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace PortfolioTracker.Database
 {
-    public static class GetConnectionString
+    public static class ConnectionString
     {
-        public static string getConnectionString(string name)
+        public static string GetConnectionString(string name)
         {
             return @"server=(localdb)\MSSQLLocalDB;Initial Catalog = " + name + "; Integrated Security = true";
         }

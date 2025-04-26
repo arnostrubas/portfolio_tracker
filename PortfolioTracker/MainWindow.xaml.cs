@@ -18,7 +18,7 @@ public partial class MainWindow : Window
 
     private async void A()
     {
-        var Data = new PortfolioManager("Portfolioo");
+        var Data = new PortfolioManager("Portfolio");
         string price = await Test.Price("GOOGL");
         double priceF = double.Parse(price);
         Stock stock = new Stock("GOOGL", priceF);

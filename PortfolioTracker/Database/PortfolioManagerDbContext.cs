@@ -9,7 +9,7 @@ namespace PortfolioTracker.Database
 {
     public class PortfolioManagerDbContext : DbContext
     {
-        private string connectionString = @"server=(localdb)\MSSQLLocalDB;Initial Catalog = PortfolioManager; Integrated Security = true";
+        private readonly string connectionString = @"server=(localdb)\MSSQLLocalDB;Initial Catalog = PortfolioManager; Integrated Security = true";
         
         public DbSet<Portfolio> Portfolios { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
