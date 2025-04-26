@@ -18,9 +18,9 @@ namespace PortfolioTracker.Database
     /// </summary>
     public class PortfolioManager
     {
-        private PortfolioManagerDbContext manager = new ();
+        private readonly PortfolioManagerDbContext manager = new ();
         public Portfolio portfolio;
-        public PortfolioDbContext portfolioDatabase;
+        public PortfolioDbContext portfolioDatabase = null!;
 
         /// <summary>
         /// Constructor for PortfolioManager
