@@ -8,6 +8,8 @@ using PortfolioTracker;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.EntityFrameworkCore;
+using System.Windows.Media.Animation;
+using System.DirectoryServices;
 
 namespace PortfolioTracker.Database
 {
@@ -24,7 +26,13 @@ namespace PortfolioTracker.Database
                 portfolio = new Portfolio(portfolioName);
                 AddPortfolio(); 
             }
+            CreateDb();
+        }
+
+        private async void CreateDb()
+        {
             this.db = new portfolioDbContext(this.portfolio.ConnectionString);
+            await db.Database.EnsureCreatedAsync();
         }
 
         private async void AddPortfolio()
@@ -44,8 +52,13 @@ namespace PortfolioTracker.Database
 
         public async Task AddOrder(Order order)
         {
-            await db.Database.EnsureCreatedAsync();
             db.Orders.Add(order);
+            await db.SaveChangesAsync();
+        }
+        
+        public async Task RemoveOrder(Order order)
+        {
+            db.Orders.Remove(order);
             await db.SaveChangesAsync();
         }
 
@@ -53,5 +66,6 @@ namespace PortfolioTracker.Database
         {
             return await db.Orders.FirstOrDefaultAsync(p => p.Id == orderID);
         }
+
     }
 }
