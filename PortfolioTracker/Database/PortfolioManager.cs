@@ -17,7 +17,7 @@ namespace PortfolioTracker.Database
     /// <summary>
     /// Class that manages a single portfolio from PortfolioManager Database
     /// </summary>
-    public class PortfolioManager
+    public class PortfolioManager : IDisposable
     {
         private readonly PortfolioManagerDbContext manager = new ();
         public Portfolio portfolio;
@@ -199,5 +199,10 @@ namespace PortfolioTracker.Database
             }
         });
 
+        public void Dispose()
+        {
+            portfolioDatabase.Dispose();
+            manager.Dispose();
+        }
     }
 }
