@@ -176,6 +176,10 @@ namespace PortfolioTracker.Database
             }
         }
 
+        /// <summary>
+        /// Updates prices in the database every minute
+        /// </summary>
+        /// <returns>Task performing the updates</returns>
         public Task UpdatePrices() => Task.Run(async () =>
         {
             int secondsBetweenUpdates = 1;
@@ -187,7 +191,7 @@ namespace PortfolioTracker.Database
                 {
                     try
                     {
-                        order.CurrentPrice = Test.Price(order.Ticker).Result;
+                        order.CurrentPrice = await Test.Price(order.Ticker);
                         i++;
                     }
                     catch
@@ -200,11 +204,11 @@ namespace PortfolioTracker.Database
             }
         });
 
-        public async void Dispose()
+        public void Dispose()
         {
+            this.cancellationTokenSource.CancelAsync().ContinueWith(_ => this.cancellationTokenSource.Dispose());
             portfolioDatabase.Dispose();
             manager.Dispose();
-            await this.cancellationTokenSource.CancelAsync().ContinueWith(_ => this.cancellationTokenSource.Dispose());
         }
     }
 }
