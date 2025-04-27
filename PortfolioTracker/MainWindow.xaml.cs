@@ -20,7 +20,14 @@ public partial class MainWindow : Window
     {
         var Data = new PortfolioManager("Portfolio");
         await Task.Delay(500);
-        Data.DatabaseToCSV();
+        Data.UpdatePrices();
+        while (true) { 
+            await Task.Delay(5000);
+            double price = await Test.Price("GOOGL");
+            Stock stock = new Stock("GOOGL", price);
+            Order order = new Order(stock, 1, (float)4.0, DateTime.Today);
+            await Data.AddOrder(order);
+        }
         /*string price = await Test.Price("GOOGL");
         double priceF = double.Parse(price);
         Stock stock = new Stock("GOOGL", priceF);
@@ -32,12 +39,12 @@ public partial class MainWindow : Window
     }
     private async void Button_Click(object sender, RoutedEventArgs e)
     {
-        TextBlock.Text = await Test.Price("AAPL");
+        TextBlock.Text = (await Test.Price("AAPL")).ToString();
     }
 
     private async void Button_Click_1(object sender, RoutedEventArgs e)
     {
-        TextBlock.Text = await Test.Price("GOOGL"); ;
+        TextBlock.Text = (await Test.Price("GOOGL")).ToString();
     }
 
     private async void Repeat()
@@ -45,7 +52,7 @@ public partial class MainWindow : Window
         while (true)
         {
             await Task.Delay(2000);
-            TextBlock.Text = await Test.Price("GOOGL");
+            TextBlock.Text = (await Test.Price("GOOGL")).ToString();
         }
     }
 }

@@ -175,5 +175,29 @@ namespace PortfolioTracker.Database
             }
         }
 
+        public Task UpdatePrices() => Task.Run(async () =>
+        {
+            int secondsBetweenUpdates = 60;
+            double i = 0;
+            while (true)
+            {
+                secondsBetweenUpdates = 60;
+                foreach (Order order in portfolioDatabase.Orders)
+                {
+                    try
+                    {
+                        order.CurrentPrice = Test.Price(order.Ticker).Result;
+                        i++;
+                    }
+                    catch
+                    {
+                        secondsBetweenUpdates = 5;
+                    }
+                }
+                await portfolioDatabase.SaveChangesAsync();
+                await Task.Delay(secondsBetweenUpdates * 1000);
+            }
+        });
+
     }
 }

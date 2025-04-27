@@ -4,12 +4,12 @@ namespace PortfolioTracker
 {
     public static class Test
     {
-        public static async Task<string> Price(string ticker)
+        public static async Task<double> Price(string ticker)
         {
             var securities = await Yahoo.Symbols(ticker)
                 .Fields(Field.RegularMarketPrice)
                 .QueryAsync();
-            return $"{securities[ticker][Field.RegularMarketPrice]}";
+            return securities[ticker][Field.RegularMarketPrice];
         }
     }
 }
