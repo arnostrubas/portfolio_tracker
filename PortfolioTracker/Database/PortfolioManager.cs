@@ -108,6 +108,7 @@ namespace PortfolioTracker.Database
         {
             return await portfolioDatabase.Orders.FirstOrDefaultAsync(p => p.Id == orderID);
         }
+
         /// <summary>
         /// Exports portfolio into CSV
         /// </summary>
@@ -185,7 +186,7 @@ namespace PortfolioTracker.Database
         /// Updates prices in the database every minute
         /// </summary>
         /// <returns>Task performing the updates</returns>
-        public async void UpdatePrices() 
+        public async void UpdatePrices()
         {
             int secondsBetweenUpdates = 60;
             while (true)
@@ -202,9 +203,29 @@ namespace PortfolioTracker.Database
                         secondsBetweenUpdates = 5;
                     }
                 }
-                await portfolioDatabase.SaveChangesAsync();
+                await portfolioDatabase.SaveChangesAsync().ContinueWith(_ => UpdatePortfolioStats());
                 await Task.Delay(secondsBetweenUpdates * 1000);
             }
+        }
+
+        private async void UpdatePortfolioStats()
+        {
+            portfolio.Invested = 0;
+            portfolio.CurrentValue = 0;
+            portfolio.Invested = portfolioDatabase.Orders.Where(o => o.OrderType == (int)OrderType.Buy).Sum(o => o.Price * o.Amount);
+            portfolio.Invested -= portfolioDatabase.Orders.Where(o => o.OrderType == (int)OrderType.Sell).Sum(o => o.Price * o.Amount);
+            var companies = portfolioDatabase.Orders.GroupBy(o => o.Ticker);
+            foreach (var company in companies) {
+                decimal buyAmount = company
+                    .Where(o => o.OrderType == (int)OrderType.Buy)
+                    .Sum(o => o.Amount);
+                decimal sellAmount = company
+                    .Where(o => o.OrderType == (int)OrderType.Sell)
+                    .Sum(o => o.Amount);
+                portfolio.CurrentValue += (buyAmount - sellAmount) * company.FirstOrDefault(o => o.OrderType == (int)OrderType.Buy).CurrentPrice;
+            }
+            portfolio.Profit = portfolio.CurrentValue - portfolio.Invested;
+            await manager.SaveChangesAsync();
         }
 
         public void Dispose()
