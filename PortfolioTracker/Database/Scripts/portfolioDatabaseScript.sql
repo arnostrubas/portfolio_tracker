@@ -8,9 +8,9 @@ CREATE TABLE [dbo].Portfolio(
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[OrderType] [int],
 	[Ticker] [varchar](5),
-	[Amount] [float],
+	[Amount] DECIMAL(18, 4),
 	[Date] [DATE], 
-	[Price] [float],
-	[CurrentPrice] [float]
+	[Price] DECIMAL(18, 4),
+	[CurrentPrice] DECIMAL(18, 4)
 	CONSTRAINT [PK_Portfolio] PRIMARY KEY CLUSTERED ([Id] ASC)
 )	 

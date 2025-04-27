@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Windows.Media.Animation;
 using System.DirectoryServices;
 using System.IO;
+using PortfolioTracker.Enums;
 
 namespace PortfolioTracker.Database
 {
@@ -22,7 +23,7 @@ namespace PortfolioTracker.Database
         private readonly PortfolioManagerDbContext manager = new ();
         public Portfolio portfolio;
         private PortfolioDbContext portfolioDatabase = null!;
-        private CancellationTokenSource cancellationTokenSource = new();
+        private readonly CancellationTokenSource cancellationTokenSource = new();
 
         /// <summary>
         /// Constructor for PortfolioManager
@@ -77,7 +78,9 @@ namespace PortfolioTracker.Database
         public async Task AddOrder(Order order)
         {
             portfolioDatabase.Orders.Add(order);
+            portfolio.NumberOfOrders++;
             await portfolioDatabase.SaveChangesAsync();
+            await manager.SaveChangesAsync();
         }
         
         /// <summary>
@@ -90,7 +93,9 @@ namespace PortfolioTracker.Database
             await portfolioDatabase.Database.EnsureCreatedAsync();
             if (order != null) {
                 portfolioDatabase.Orders.Remove(order);
+                portfolio.NumberOfOrders--;
                 await portfolioDatabase.SaveChangesAsync();
+                await manager.SaveChangesAsync();
             }
         }
 
@@ -166,8 +171,8 @@ namespace PortfolioTracker.Database
             try
             {
                 string[] parts = line.Split(';');
-                Stock stock = new(parts[2], double.Parse(parts[5]));
-                Order order = new(stock, int.Parse(parts[1]), double.Parse(parts[3]), DateTime.Parse(parts[4]));
+                Stock stock = new(parts[2], decimal.Parse(parts[5]));
+                Order order = new(stock, int.Parse(parts[1]), decimal.Parse(parts[3]), DateTime.Parse(parts[4]));
                 return order;
             }
             catch (Exception ex) 
@@ -180,19 +185,17 @@ namespace PortfolioTracker.Database
         /// Updates prices in the database every minute
         /// </summary>
         /// <returns>Task performing the updates</returns>
-        public Task UpdatePrices() => Task.Run(async () =>
+        public async void UpdatePrices() 
         {
-            int secondsBetweenUpdates = 1;
-            double i = 0;
-            while (!cancellationTokenSource.Token.IsCancellationRequested)
+            int secondsBetweenUpdates = 60;
+            while (true)
             {
-                secondsBetweenUpdates = 1;
-                foreach (Order order in portfolioDatabase.Orders)
+                secondsBetweenUpdates = 60;
+                foreach (Order order in portfolioDatabase.Orders.Where(o => o.OrderType != (int)OrderType.Sell))
                 {
                     try
                     {
                         order.CurrentPrice = await Test.Price(order.Ticker);
-                        i++;
                     }
                     catch
                     {
@@ -202,7 +205,7 @@ namespace PortfolioTracker.Database
                 await portfolioDatabase.SaveChangesAsync();
                 await Task.Delay(secondsBetweenUpdates * 1000);
             }
-        });
+        }
 
         public void Dispose()
         {

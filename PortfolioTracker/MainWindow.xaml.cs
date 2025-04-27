@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using PortfolioTracker.Database;
+using PortfolioTracker.Enums;
 using PortfolioTracker.Models;
 
 namespace PortfolioTracker;
@@ -18,15 +19,18 @@ public partial class MainWindow : Window
 
     private async void A()
     {
-        using var Data = new PortfolioManager("Portfolio");
-        await Task.Delay(500);
+        var Data = new PortfolioManager("Portfolio");
+        /*await Task.Delay(500);
         Data.UpdatePrices();
-        Data.Dispose();
-        /*string price = await Test.Price("GOOsGL");
-        double priceF = double.Parse(price);
-        Stock stock = new Stock("GOOGL", priceF);
-        Order order = new Order(stock, 1, (float)4.0, DateTime.Today);
+        Data.Dispose();*/
+        decimal price = await Test.Price("GOOGL");
+        Stock stock = new Stock("GOOGL", price);
+        Order order = new Order(stock, (int)OrderType.Buy, (decimal)4.2, DateTime.Today);
         await Data.AddOrder(order);
+        await Task.Delay(10);
+        Data.UpdatePrices();
+        
+        /*
         var order1 = await Data.GetOrder(10);
         if (order1 != null) await Data.RemoveOrder(order1);
         await Data.DatabaseToCSV();*/

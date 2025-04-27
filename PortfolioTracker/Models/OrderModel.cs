@@ -9,12 +9,12 @@ namespace PortfolioTracker.Models
         public int Id { get; set; }
         public int OrderType { get; set; }
         public string Ticker { get; set; } = "";
-        public double Amount { get; set; }
+        public Decimal Amount { get; set; }
         public DateTime Date { get; set; }
-        public double Price { get; set; }
-        public double CurrentPrice { get; set; }
+        public Decimal Price { get; set; }
+        public Decimal CurrentPrice { get; set; }
         public Order() { }
-        public Order(Stock stock, int orderType, double amount, DateTime date)
+        public Order(Stock stock, int orderType, Decimal amount, DateTime date)
         {
             this.Ticker = stock.ticker;
             this.Price = stock.price;
