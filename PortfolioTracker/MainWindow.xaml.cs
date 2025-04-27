@@ -21,6 +21,7 @@ public partial class MainWindow : Window
         using var Data = new PortfolioManager("Portfolio");
         await Task.Delay(500);
         Data.UpdatePrices();
+        Data.Dispose();
         /*string price = await Test.Price("GOOsGL");
         double priceF = double.Parse(price);
         Stock stock = new Stock("GOOGL", priceF);

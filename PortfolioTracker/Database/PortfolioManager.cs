@@ -22,6 +22,7 @@ namespace PortfolioTracker.Database
         private readonly PortfolioManagerDbContext manager = new ();
         public Portfolio portfolio;
         private PortfolioDbContext portfolioDatabase = null!;
+        private CancellationTokenSource cancellationTokenSource = new();
 
         /// <summary>
         /// Constructor for PortfolioManager
@@ -177,11 +178,11 @@ namespace PortfolioTracker.Database
 
         public Task UpdatePrices() => Task.Run(async () =>
         {
-            int secondsBetweenUpdates = 60;
+            int secondsBetweenUpdates = 1;
             double i = 0;
-            while (true)
+            while (!cancellationTokenSource.Token.IsCancellationRequested)
             {
-                secondsBetweenUpdates = 60;
+                secondsBetweenUpdates = 1;
                 foreach (Order order in portfolioDatabase.Orders)
                 {
                     try
@@ -199,10 +200,11 @@ namespace PortfolioTracker.Database
             }
         });
 
-        public void Dispose()
+        public async void Dispose()
         {
             portfolioDatabase.Dispose();
             manager.Dispose();
+            await this.cancellationTokenSource.CancelAsync().ContinueWith(_ => this.cancellationTokenSource.Dispose());
         }
     }
 }
