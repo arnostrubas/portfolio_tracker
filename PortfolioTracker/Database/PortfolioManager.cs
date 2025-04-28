@@ -20,7 +20,7 @@ namespace PortfolioTracker.Database
     /// </summary>
     public class PortfolioManager : IDisposable
     {
-        private readonly PortfolioManagerDbContext manager = new ();
+        private readonly PortfolioManagerDbContext manager = new();
         public Portfolio portfolio;
         private PortfolioDbContext portfolioDatabase = null!;
         private readonly CancellationTokenSource cancellationTokenSource = new();
@@ -34,9 +34,9 @@ namespace PortfolioTracker.Database
         {
             var existing = manager.Portfolios.FirstOrDefault(p => p.Name == portfolioName);
             if (existing != null) { this.portfolio = existing; }
-            else { 
+            else {
                 portfolio = new Portfolio(portfolioName);
-                AddPortfolio(); 
+                AddPortfolio();
             }
             CreateDb();
         }
@@ -78,11 +78,10 @@ namespace PortfolioTracker.Database
         public async Task AddOrder(Order order)
         {
             portfolioDatabase.Orders.Add(order);
-            portfolio.NumberOfOrders++;
             await portfolioDatabase.SaveChangesAsync();
             await manager.SaveChangesAsync();
         }
-        
+
         /// <summary>
         /// Removes a order from the database
         /// </summary>
@@ -93,7 +92,6 @@ namespace PortfolioTracker.Database
             await portfolioDatabase.Database.EnsureCreatedAsync();
             if (order != null) {
                 portfolioDatabase.Orders.Remove(order);
-                portfolio.NumberOfOrders--;
                 await portfolioDatabase.SaveChangesAsync();
                 await manager.SaveChangesAsync();
             }
@@ -129,8 +127,8 @@ namespace PortfolioTracker.Database
                     csv.WriteLine($"{order.Id};{order.OrderType};{order.Ticker};{order.Amount};{order.Date:dd-MM-yyyy};{order.Price};{order.CurrentPrice}");
                 }
             }
-            catch (Exception ex) 
-            { 
+            catch (Exception ex)
+            {
                 throw new Exception("Export failed! " + ex.Message);
             }
         });
@@ -149,14 +147,14 @@ namespace PortfolioTracker.Database
                 var csv = File.ReadLines(importPath);
                 foreach (var line in csv.Skip(1))
                 {
-                    if (line is not  null)
+                    if (line is not null)
                     {
                         var order = CsvLineToOrder(line);
                         if (!portfolioDatabase.Orders.Any(p => p.Equals(order))) await AddOrder(order);
                     }
                 }
             }
-            catch (Exception ex)  
+            catch (Exception ex)
             {
                 throw new Exception("Import failed! " + ex.Message);
             }
@@ -176,9 +174,9 @@ namespace PortfolioTracker.Database
                 Order order = new(stock, int.Parse(parts[1]), decimal.Parse(parts[3]), DateTime.Parse(parts[4]));
                 return order;
             }
-            catch (Exception ex) 
-            { 
-                throw new Exception("Parsing failed! " + ex.Message); 
+            catch (Exception ex)
+            {
+                throw new Exception("Parsing failed! " + ex.Message);
             }
         }
 
@@ -210,23 +208,57 @@ namespace PortfolioTracker.Database
 
         private async void UpdatePortfolioStats()
         {
-            portfolio.Invested = 0;
-            portfolio.CurrentValue = 0;
-            portfolio.Invested = portfolioDatabase.Orders.Where(o => o.OrderType == (int)OrderType.Buy).Sum(o => o.Price * o.Amount);
-            portfolio.Invested -= portfolioDatabase.Orders.Where(o => o.OrderType == (int)OrderType.Sell).Sum(o => o.Price * o.Amount);
+            decimal invested = 0;
+            decimal currentValue = 0;
+            bool success = true;
+
             var companies = portfolioDatabase.Orders.GroupBy(o => o.Ticker);
             foreach (var company in companies) {
-                decimal buyAmount = company
-                    .Where(o => o.OrderType == (int)OrderType.Buy)
-                    .Sum(o => o.Amount);
-                decimal sellAmount = company
-                    .Where(o => o.OrderType == (int)OrderType.Sell)
-                    .Sum(o => o.Amount);
-                portfolio.CurrentValue += (buyAmount - sellAmount) * company.FirstOrDefault(o => o.OrderType == (int)OrderType.Buy).CurrentPrice;
+                try
+                {
+                    var result = await CompanyValue(company);
+                    invested += result.invested;
+                    currentValue += result.value;
+                }
+                catch 
+                {
+                    success = false;
+                    break;
+                }
             }
-            portfolio.Profit = portfolio.CurrentValue - portfolio.Invested;
+            if (success)
+            {
+                portfolio.Invested = invested;
+                portfolio.CurrentValue = currentValue;
+                portfolio.Profit = portfolio.CurrentValue - portfolio.Invested;
+            }
+            portfolio.NumberOfOrders = portfolioDatabase.Orders.Count();
             await manager.SaveChangesAsync();
         }
+
+        public async static Task<(decimal invested, decimal value)> CompanyValue(IGrouping<string, Order> company)
+        {
+            var buyOrders = company
+                .Where(o => o.OrderType == (int)OrderType.Buy);
+
+            var sellOrders = company
+                .Where(o => o.OrderType == (int)OrderType.Sell);
+
+            decimal buyAmount = buyOrders.Sum(o => o.Amount);
+            decimal sellAmount = sellOrders.Sum(o => o.Amount);
+            var value = (buyAmount - sellAmount) * await Test.Price(company.Key);
+
+            decimal invested = 0;
+            foreach (var order in buyOrders) {
+                invested += order.Amount * order.Price;
+            }
+            foreach (var order in sellOrders) { 
+                invested -= order.Amount * order.Price;
+            }
+            
+            return (invested, value);
+        }
+
 
         public void Dispose()
         {

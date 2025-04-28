@@ -23,9 +23,9 @@ public partial class MainWindow : Window
         /*await Task.Delay(500);
         Data.UpdatePrices();
         Data.Dispose();*/
-        decimal price = await Test.Price("GOOGL");
-        Stock stock = new Stock("GOOGL", price);
-        Order order = new Order(stock, (int)OrderType.Sell, (decimal)5.8, DateTime.Today);
+        decimal price = await Test.Price("AAPL");
+        Stock stock = new Stock("AAPL", 100);
+        Order order = new Order(stock, (int)OrderType.Buy, (decimal)3.4, DateTime.Today);
         //await Data.AddOrder(order);
         await Task.Delay(10);
         Data.UpdatePrices();
