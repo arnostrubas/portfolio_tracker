@@ -26,10 +26,10 @@ public partial class MainWindow : Window
         decimal price = await Test.Price("AAPL");
         Stock stock = new Stock("AAPL", 100);
         Order order = new Order(stock, (int)OrderType.Buy, (decimal)3.4, DateTime.Today);
-        //await Data.AddOrder(order);
+        await Data.AddOrder(order);
         await Task.Delay(10);
         Data.UpdatePrices();
-        
+
         /*
         var order1 = await Data.GetOrder(10);
         if (order1 != null) await Data.RemoveOrder(order1);
