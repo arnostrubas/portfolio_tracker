@@ -22,8 +22,8 @@ namespace PortfolioTracker.Database
     public class PortfolioManager : IDisposable
     {
         private readonly PortfolioManagerDbContext manager = new();
-        public Portfolio portfolio;
-        private PortfolioDbContext portfolioDatabase = null!;
+        public Portfolio portfolio {  get; private set; }
+        public PortfolioDbContext portfolioDatabase { get; private set; } = null!;
         private readonly CancellationTokenSource cancellationTokenSource = new();
         private CancellationToken cancellationToken = new();
 
@@ -110,86 +110,12 @@ namespace PortfolioTracker.Database
         }
 
         /// <summary>
-        /// Exports portfolio into CSV
-        /// </summary>
-        /// <returns>Task which is exporting the data</returns>
-        public void DatabaseToCSV() => Task.Run(async () =>
-        {
-            try
-            {
-                string exportPath = Path.Combine("..", "..", "..", "Export", this.portfolio.Name + "Export.csv");
-                var orders = await portfolioDatabase.Orders.ToListAsync();
-                using var file = File.Create(exportPath);
-                using var csv = new StreamWriter(file);
-
-                csv.WriteLine("Id;OrderType;Ticker;Amount;Date;Price;CurrentPrice");
-
-                foreach (var order in orders)
-                {
-                    csv.WriteLine($"{order.Id};{order.OrderType};{order.Ticker};{order.Amount};{order.Date:dd-MM-yyyy};{order.Price};{order.CurrentPrice}");
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Export failed! " + ex.Message);
-            }
-        });
-
-        /// <summary>
-        /// Imports all data (that is not already in the database) into the database
-        /// </summary>
-        /// <param name="fileName">File from which the orders will be imported</param>
-        /// <returns>Task performing the import</returns>
-        /// <exception cref="Exception">Import failed + reason of exception</exception>
-        public void CSVToDatabase(string fileName) => Task.Run(async () =>
-        {
-            try
-            {
-                string importPath = Path.Combine("..", "..", "..", "Export", fileName);
-                var csv = File.ReadLines(importPath);
-                foreach (var line in csv.Skip(1))
-                {
-                    if (line is not null)
-                    {
-                        var order = CsvLineToOrder(line);
-                        if (!portfolioDatabase.Orders.Any(p => p.Equals(order))) await AddOrder(order);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Import failed! " + ex.Message);
-            }
-        });
-
-        /// <summary>
-        /// Takes a csv string and converts it into order
-        /// </summary>
-        /// <param name="line">Line to be parsed</param>
-        /// <returns>Order parsed from the line</returns>
-        private static Order CsvLineToOrder(string line)
-        {
-            try
-            {
-                string[] parts = line.Split(';');
-                Stock stock = new(parts[2], decimal.Parse(parts[5]));
-                Order order = new(stock, int.Parse(parts[1]), decimal.Parse(parts[3]), DateTime.Parse(parts[4]));
-                return order;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Parsing failed! " + ex.Message);
-            }
-        }
-
-        /// <summary>
         /// Updates prices in the database every minute
         /// </summary>
         /// <returns>Task performing the updates</returns>
         public Task UpdatePrices() => Task.Run(async () =>
         {
             int secondsBetweenUpdates = 60;
-            int i = 0;
             while (!cancellationToken.IsCancellationRequested)
             {
                 try
@@ -207,7 +133,7 @@ namespace PortfolioTracker.Database
                         }
                     }
                     await portfolioDatabase.SaveChangesAsync().ContinueWith(_ => UpdatePortfolioStats());
-                    await Task.Delay(secondsBetweenUpdates * 100, cancellationToken);
+                    await Task.Delay(secondsBetweenUpdates * 1000, cancellationToken);
                 }
                 catch
                 {
