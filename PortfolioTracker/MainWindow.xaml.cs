@@ -53,4 +53,5 @@ public partial class MainWindow : Window
             TextBlock.Text = (await Test.Price("GOOGL")).ToString();
         }
     }
+
 }

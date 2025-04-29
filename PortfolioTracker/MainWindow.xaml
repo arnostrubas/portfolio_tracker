@@ -9,7 +9,7 @@
         MinWidth="800"
         Height="450"
         Width="400"
-        Title="Portfolio Tracker" Background="#FF051B86" FontFamily="Courier New" Icon="/11037-chart-with-upwards-trend.png">
+        Title="Portfolio Tracker" Background="#FF051B86" FontFamily="Courier New" >
     <Grid Background="#FF374BAE">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="103*"/>
@@ -17,7 +17,7 @@
         </Grid.ColumnDefinitions>
 
 
-        <Grid Background="#FFE2E3ED" Grid.Row="0" Grid.Column="1" Margin="138,138,122,145">
+        <Grid Background="#FFE2E3ED" Grid.Row="0" Grid.Column="1" Margin="122,36,138,247">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="29*"/>
                 <ColumnDefinition Width="20*"/>
