@@ -6,29 +6,21 @@
         xmlns:local="clr-namespace:PortfolioTracker.Views"
         mc:Ignorable="d"
         Title="PortfolioTracker" Height="450" Width="800" Name="MainWindow" Icon="../Data/Logo.ico">
-    <!--<Viewbox Stretch="Uniform">-->
+    <Viewbox Stretch="Uniform">
         <Grid Margin="5,0,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="53*"/>
                 <ColumnDefinition Width="347*"/>
             </Grid.ColumnDefinitions>
-            <StackPanel Margin="0,0,5,0">
+            <StackPanel Margin="5,0,5,0">
                 <TextBlock FontWeight="Bold" TextAlignment="Center"><Run Text="Portfolio"/></TextBlock>
-                <ComboBox Width="93" Height="25">
-                    <ListView>
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn/>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                </ComboBox>
-                <Button Content="Overview" Margin="0,10,0,0"/>
-                <Button Content="Orders" Margin="0,10,0,0"/>
-                <Button Content="New portfolio" Margin="0,250,0,0" VerticalContentAlignment="Center" />
-                <Button Content="New Order" Margin="0,10,0,0"/>
+                <ComboBox Width="93" Height="25" ItemsSource="{Binding}"/>
+                <Button Content="Overview" Margin="0,10,0,0" Click="Button_Click_2"/>
+                <Button Content="Orders" Margin="0,10,0,0" Click="Button_Click"/>
+                <Button Content="New portfolio" Margin="0,250,0,0" VerticalContentAlignment="Center" Click="Button_Click_3" />
+                <Button Content="New Order" Margin="0,10,0,0" Click="Button_Click_1"/>
             </StackPanel>
             <ContentControl Name="ContentView" Grid.Column="1" Content="{Binding CurrentView}" HorizontalAlignment="Left" Margin="5,0,0,0"/>
         </Grid>
-    <!--</Viewbox> -->
+    </Viewbox>
 </Window>
