@@ -20,7 +20,7 @@
                 <Button Content="New portfolio" Margin="0,250,0,0" VerticalContentAlignment="Center" Click="Button_Click_3" />
                 <Button Content="New Order" Margin="0,10,0,0" Click="Button_Click_1"/>
             </StackPanel>
-            <ContentControl Name="ContentView" Grid.Column="1" Content="{Binding CurrentView}" HorizontalAlignment="Left" Margin="5,0,0,0"/>
+            <ContentControl Name="ContentView" Grid.Column="1" Content="{Binding CurrentView}" HorizontalAlignment="Left" Margin="5,0,0,0" Width="736"/>
         </Grid>
     </Viewbox>
 </Window>
