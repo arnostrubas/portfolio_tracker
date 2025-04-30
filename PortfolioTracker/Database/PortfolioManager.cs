@@ -21,9 +21,9 @@ namespace PortfolioTracker.Database
     /// </summary>
     public class PortfolioManager : IDisposable
     {
-        private readonly PortfolioManagerDbContext manager = new();
         public Portfolio portfolio {  get; private set; }
         public PortfolioDbContext portfolioDatabase { get; private set; } = null!;
+
         private readonly CancellationTokenSource cancellationTokenSource = new();
         private CancellationToken cancellationToken = new();
 
@@ -34,11 +34,11 @@ namespace PortfolioTracker.Database
         /// <param name="portfolioName"> Name of the portfolio to be managed. </param>
         public PortfolioManager(string portfolioName)
         {
-            var existing = manager.Portfolios.FirstOrDefault(p => p.Name == portfolioName);
+            var existing = MainDatabaseManager.manager.Portfolios.FirstOrDefault(p => p.Name == portfolioName);
             if (existing != null) { this.portfolio = existing; }
             else {
                 portfolio = new Portfolio(portfolioName);
-                AddPortfolio();
+                MainDatabaseManager.AddPortfolio(portfolio);
             }
             CreateDb();
         }
@@ -53,26 +53,6 @@ namespace PortfolioTracker.Database
         }
 
         /// <summary>
-        /// Adds a portfolio to manager database (expects that the portfolio with the same name isnt in the database
-        /// Used only in constructor
-        /// </summary>
-        private async void AddPortfolio()
-        {
-            manager.Portfolios.Add(this.portfolio);
-            await manager.SaveChangesAsync();
-        }
-
-        /// <summary>
-        /// Removes a portfolio from the database.
-        /// Dispose manager after
-        /// </summary>
-        public async void RemovePortfolio()
-        {
-            manager.Portfolios.Remove(this.portfolio);
-            await manager.SaveChangesAsync();
-        }
-
-        /// <summary>
         /// Adds an order to the database
         /// </summary>
         /// <param name="order">Order to be added</param>
@@ -81,7 +61,6 @@ namespace PortfolioTracker.Database
         {
             portfolioDatabase.Orders.Add(order);
             await portfolioDatabase.SaveChangesAsync();
-            await manager.SaveChangesAsync();
         }
 
         /// <summary>
@@ -95,7 +74,6 @@ namespace PortfolioTracker.Database
             if (order != null) {
                 portfolioDatabase.Orders.Remove(order);
                 await portfolioDatabase.SaveChangesAsync();
-                await manager.SaveChangesAsync();
             }
         }
 
@@ -174,7 +152,7 @@ namespace PortfolioTracker.Database
                     portfolio.Invested = invested;
                     portfolio.CurrentValue = currentValue;
                     portfolio.Profit = portfolio.CurrentValue - portfolio.Invested;
-                    await manager.SaveChangesAsync();
+                    MainDatabaseManager.UpdatePortfolio(portfolio);
                 }
             }
             catch
@@ -217,7 +195,6 @@ namespace PortfolioTracker.Database
             await Task.Delay(1000); // to give time for the tasks to end
             this.cancellationTokenSource.Dispose();
             portfolioDatabase.Dispose();
-            manager.Dispose();
         }
     }
 }

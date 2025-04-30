@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.Identity.Client;
 
-namespace PortfolioTracker.Database
+namespace PortfolioTracker.Models
 {
     [Table("PortfolioManager")]
     public class Portfolio
