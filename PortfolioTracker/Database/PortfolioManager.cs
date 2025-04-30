@@ -22,7 +22,7 @@ namespace PortfolioTracker.Database
     public class PortfolioManager : IDisposable
     {
         public Portfolio portfolio {  get; private set; }
-        public PortfolioDbContext portfolioDatabase { get; private set; } = null!;
+        public PortfolioManagerDbContext portfolioDatabase { get; private set; } = null!;
 
         private readonly CancellationTokenSource cancellationTokenSource = new();
         private CancellationToken cancellationToken = new();
@@ -37,19 +37,15 @@ namespace PortfolioTracker.Database
             var existing = MainDatabaseManager.manager.Portfolios.FirstOrDefault(p => p.Name == portfolioName);
             if (existing != null) { this.portfolio = existing; }
             else {
-                portfolio = new Portfolio(portfolioName);
-                MainDatabaseManager.AddPortfolio(portfolio);
+                this.portfolio = new Portfolio(portfolioName);
+                MainDatabaseManager.AddPortfolio(this.portfolio);
             }
             CreateDb();
         }
 
-        /// <summary>
-        /// Creates a PortfolioDbContext and ensures database for the portfolio is created
-        /// </summary>
         private async void CreateDb()
         {
-            this.portfolioDatabase = new PortfolioDbContext(this.portfolio.ConnectionString);
-            await portfolioDatabase.Database.EnsureCreatedAsync();
+            this.portfolioDatabase = await MainDatabaseManager.CreateDb(this.portfolio);
         }
 
         /// <summary>

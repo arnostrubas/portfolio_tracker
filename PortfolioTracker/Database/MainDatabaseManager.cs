@@ -9,7 +9,17 @@ namespace PortfolioTracker.Database
 {
     public static class MainDatabaseManager
     {
-        public static readonly PortfolioManagerDbContext manager = new();
+        public static readonly MainDatabaseDbContext manager = new();
+
+        /// <summary>
+        /// Creates a PortfolioDbContext and ensures database for the portfolio is created
+        /// </summary>
+        public static async Task<PortfolioManagerDbContext> CreateDb(Portfolio portfolio)
+        {
+            var portfolioDatabase = new PortfolioManagerDbContext(portfolio.ConnectionString);
+            await portfolioDatabase.Database.EnsureCreatedAsync();
+            return portfolioDatabase;
+        }
 
         /// <summary>
         /// Adds a portfolio to manager database (expects that the portfolio with the same name isnt in the database
