@@ -15,7 +15,7 @@ namespace PortfolioTracker.Database
         /// Exports portfolio into CSV
         /// </summary>
         /// <returns>Task which is exporting the data</returns>
-        public static void DatabaseToCSV(Portfolio portfolio, PortfolioDbContext portfolioDatabase) => Task.Run(async () =>
+        public static void DatabaseToCSV(Portfolio portfolio, PortfolioManagerDbContext portfolioDatabase) => Task.Run(async () =>
         {
             try
             {
