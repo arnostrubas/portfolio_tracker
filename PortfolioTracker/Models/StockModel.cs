@@ -11,9 +11,5 @@
             this.price = price;
             this.currentPrice = price;
         }
-        public void UpdatePrice(Decimal currentPrice)
-        {
-            this.currentPrice = currentPrice;
-        }
     }
 }
