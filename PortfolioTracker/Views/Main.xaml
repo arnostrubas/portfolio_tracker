@@ -14,7 +14,7 @@
             </Grid.ColumnDefinitions>
             <StackPanel Margin="5,0,5,0">
                 <TextBlock FontWeight="Bold" TextAlignment="Center"><Run Text="Portfolio"/></TextBlock>
-                <ComboBox Width="93" Height="25" ItemsSource="{Binding}"/>
+                <ComboBox Width="93" Height="25" ItemsSource="{Binding Portfolios}"/>
                 <Button Content="Overview" Margin="0,10,0,0" Click="Button_Click_2"/>
                 <Button Content="Orders" Margin="0,10,0,0" Click="Button_Click"/>
                 <Button Content="New portfolio" Margin="0,250,0,0" VerticalContentAlignment="Center" Click="Button_Click_3" />

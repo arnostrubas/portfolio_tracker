@@ -11,6 +11,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using PortfolioTracker.Database;
+using PortfolioTracker.Models;
+using PortfolioTracker.ViewModels;
 
 namespace PortfolioTracker.Views
 {
@@ -23,6 +26,7 @@ namespace PortfolioTracker.Views
         {
             InitializeComponent();
             ContentView.Content = new Overview();
+            DataContext = new MainViewModel();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

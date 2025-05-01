@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Azure.Core;
 using PortfolioTracker.Models;
 
 namespace PortfolioTracker.Database
@@ -11,6 +13,9 @@ namespace PortfolioTracker.Database
     {
         public static readonly MainDatabaseDbContext manager = new();
 
+        private static readonly ObservableCollection<string> portfolios = manager.PortfolioNames();
+        public static ObservableCollection<string> GetPortfolios() => portfolios;
+
         /// <summary>
         /// Creates a PortfolioDbContext and ensures database for the portfolio is created
         /// </summary>
@@ -18,6 +23,7 @@ namespace PortfolioTracker.Database
         {
             var portfolioDatabase = new PortfolioManagerDbContext(portfolio.ConnectionString);
             await portfolioDatabase.Database.EnsureCreatedAsync();
+            await AddPortfolio(portfolio);
             return portfolioDatabase;
         }
 
@@ -25,8 +31,9 @@ namespace PortfolioTracker.Database
         /// Adds a portfolio to manager database (expects that the portfolio with the same name isnt in the database
         /// Used only in constructor
         /// </summary>
-        public static async void AddPortfolio(Portfolio portfolio)
+        private static async Task AddPortfolio(Portfolio portfolio)
         {
+            portfolios.Add(portfolio.Name);
             manager.Portfolios.Add(portfolio);
             await manager.SaveChangesAsync();
         }
@@ -38,6 +45,7 @@ namespace PortfolioTracker.Database
         public static async void RemovePortfolio(Portfolio portfolio)
         {
             manager.Portfolios.Remove(portfolio);
+            portfolios.Remove(portfolio.Name);
             await manager.SaveChangesAsync();
         }
 

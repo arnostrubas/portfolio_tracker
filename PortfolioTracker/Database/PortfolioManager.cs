@@ -38,9 +38,8 @@ namespace PortfolioTracker.Database
             if (existing != null) { this.portfolio = existing; }
             else {
                 this.portfolio = new Portfolio(portfolioName);
-                MainDatabaseManager.AddPortfolio(this.portfolio);
+                CreateDb();
             }
-            CreateDb();
         }
 
         private async void CreateDb()
