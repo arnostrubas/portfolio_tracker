@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using PortfolioTracker.Database;
+using PortfolioTracker.ViewModels;
 
 namespace PortfolioTracker.Views
 {
@@ -20,9 +22,12 @@ namespace PortfolioTracker.Views
     /// </summary>
     public partial class Overview : UserControl
     {
-        public Overview()
+        private PortfolioManager _manager;
+        public Overview(PortfolioManager manager)
         {
             InitializeComponent();
+            var overviewViewModel = new OverviewViewModel(manager);
+            DataContext = overviewViewModel;
         }
     }
 }

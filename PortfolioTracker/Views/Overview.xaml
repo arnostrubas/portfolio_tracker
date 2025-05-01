@@ -27,7 +27,7 @@
             </StackPanel>
             <StackPanel Grid.Column="2">
                 <Label Content="Profit" HorizontalContentAlignment="Center"/>
-                <TextBlock TextWrapping="Wrap" Text="0" Height="30" TextAlignment="Center" FontSize="20"/>
+                <TextBlock TextWrapping="Wrap" Text="{Binding Profit}" Height="30" TextAlignment="Center" FontSize="20"/>
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1">

@@ -25,28 +25,8 @@ namespace PortfolioTracker.Views
         public Main()
         {
             InitializeComponent();
-            ContentView.Content = new Overview();
-            DataContext = new MainViewModel();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            ContentView.Content = new Orders();
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            ContentView.Content = new AddOrder();
-        }
-
-        private void Button_Click_2(object sender, RoutedEventArgs e)
-        {
-            ContentView.Content = new Overview();
-        }
-
-        private void Button_Click_3(object sender, RoutedEventArgs e)
-        {
-            ContentView.Content = new AddPortfolio();
+            var mainViewModel= new MainViewModel();
+            DataContext = mainViewModel;
         }
     }
 }
