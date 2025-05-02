@@ -22,7 +22,7 @@ namespace PortfolioTracker.Views
     /// </summary>
     public partial class Overview : UserControl
     {
-        private PortfolioManager _manager;
+        public PortfolioManager manager { get; private set; }
         public Overview(PortfolioManager manager)
         {
             InitializeComponent();

@@ -35,11 +35,15 @@ namespace PortfolioTracker.Database
         public PortfolioManager(string portfolioName)
         {
             var existing = MainDatabaseManager.manager.Portfolios.FirstOrDefault(p => p.Name == portfolioName);
-            if (existing != null) { this.portfolio = existing; }
+            if (existing != null) { 
+                portfolio = existing; 
+                portfolioDatabase = new PortfolioManagerDbContext(ConnectionString.GetConnectionString(portfolioName)); 
+            }
             else {
                 this.portfolio = new Portfolio(portfolioName);
                 CreateDb();
             }
+            UpdatePrices();
         }
 
         private async void CreateDb()
@@ -88,6 +92,7 @@ namespace PortfolioTracker.Database
         /// <returns>Task performing the updates</returns>
         public Task UpdatePrices() => Task.Run(async () =>
         {
+            await Task.Delay(1000);
             int secondsBetweenUpdates = 60;
             while (!cancellationToken.IsCancellationRequested)
             {
@@ -110,6 +115,7 @@ namespace PortfolioTracker.Database
                 }
                 catch
                 {
+                    throw new Exception();
                 }
             }
         });
@@ -174,10 +180,9 @@ namespace PortfolioTracker.Database
 
             decimal invested = 0;
             foreach (var order in buyOrders) {
-                invested += order.Amount * order.Price;
-            }
-            foreach (var order in sellOrders) { 
-                invested -= order.Amount * order.Price;
+                if (sellAmount <= 0) invested += order.Amount * order.Price;
+                else if (sellAmount - order.Amount < 0) invested += (order.Amount - sellAmount) * order.Price;
+                else if (sellAmount - order.Amount > 0) sellAmount -= order.Amount;
             }
             
             return (invested, value);

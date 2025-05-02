@@ -51,14 +51,23 @@ namespace PortfolioTracker.Database
 
         public static async void UpdatePortfolio(Portfolio portfolio)
         {
-            var CurrentPortfolio = manager.Portfolios.FirstOrDefault(p => p.Name == portfolio.Name);
-            if (CurrentPortfolio != null) {
-                CurrentPortfolio.CurrentValue = portfolio.CurrentValue;
-                CurrentPortfolio.NumberOfOrders = portfolio.NumberOfOrders;
-                CurrentPortfolio.Profit = portfolio.Profit;
-                CurrentPortfolio.CurrentValue = portfolio.CurrentValue;
-                CurrentPortfolio.Invested = portfolio.Invested;
-                await manager.SaveChangesAsync();
+            bool success = false;
+            while (!success)
+            {
+                try
+                {
+                    var CurrentPortfolio = manager.Portfolios.FirstOrDefault(p => p.Name == portfolio.Name);
+                    if (CurrentPortfolio != null)
+                    {
+                        CurrentPortfolio.CurrentValue = portfolio.CurrentValue;
+                        CurrentPortfolio.NumberOfOrders = portfolio.NumberOfOrders;
+                        CurrentPortfolio.Profit = portfolio.Profit;
+                        CurrentPortfolio.Invested = portfolio.Invested;
+                        await manager.SaveChangesAsync();
+                    }
+                    success = true;
+                }
+                catch { }
             }
         }
     }

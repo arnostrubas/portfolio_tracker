@@ -20,13 +20,22 @@ namespace PortfolioTracker.ViewModels
         public RelayCommand ChangeToAddOrderCommand { get; set; }
         public ContentControl CurrentView { get; set; } = new();
         public ObservableCollection<string> Portfolios { get; set; }
-        private readonly PortfolioManager _manager;
-        public string SelectedPortfolioName { get; set; }
+        private PortfolioManager _manager;
+        private string _selectedPortfolioName;
+        public string SelectedPortfolioName { 
+            get => _selectedPortfolioName ;
+            set {
+                if (_selectedPortfolioName != value) { 
+                    _selectedPortfolioName = value;
+                    ChangePortfolio(null);
+                }            
+            } 
+        }
         public MainViewModel()
         {
             Portfolios = MainDatabaseManager.GetPortfolios();
-            SelectedPortfolioName = Portfolios.First();
-            _manager = new PortfolioManager(SelectedPortfolioName);
+            _selectedPortfolioName = Portfolios.First();
+            _manager = new PortfolioManager(_selectedPortfolioName);
             CurrentView.Content = new Overview(_manager);
 
             ChangeToOverviewCommand = new RelayCommand(ChangeToOverview, _ => true);
@@ -38,5 +47,11 @@ namespace PortfolioTracker.ViewModels
         private void ChangeToOrders(object? obj) => CurrentView.Content = new Orders();
         private void ChangeToAddPortfolio(object? obj) => CurrentView.Content = new AddPortfolio();
         private void ChangeToAddOrder(object? obj) => CurrentView.Content = new AddOrder();
+        private void ChangePortfolio(object? obj)
+        {
+            //_manager.Dispose();
+            _manager = new PortfolioManager(_selectedPortfolioName);
+            CurrentView.Content = new Overview(_manager);
+        }
     }
 }
