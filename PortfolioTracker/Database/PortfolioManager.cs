@@ -25,7 +25,8 @@ namespace PortfolioTracker.Database
         public PortfolioManagerDbContext portfolioDatabase { get; private set; } = null!;
 
         private readonly CancellationTokenSource cancellationTokenSource = new();
-        private CancellationToken cancellationToken = new();
+        private readonly CancellationToken cancellationToken = new();
+        public List<Company> Companies { get; private set; } = new();
 
         /// <summary>
         /// Constructor for PortfolioManager
@@ -34,6 +35,7 @@ namespace PortfolioTracker.Database
         /// <param name="portfolioName"> Name of the portfolio to be managed. </param>
         public PortfolioManager(string portfolioName)
         {
+            var exists = true;
             var existing = MainDatabaseManager.manager.Portfolios.FirstOrDefault(p => p.Name == portfolioName);
             if (existing != null) { 
                 portfolio = existing; 
@@ -41,12 +43,39 @@ namespace PortfolioTracker.Database
             }
             else {
                 this.portfolio = new Portfolio(portfolioName);
-                CreateDb();
+                exists = false;
             }
+            Start(exists);
+        }
+
+        private async void Start(bool exists)
+        {
+            if (!exists) await CreateDb();
+            await UpdateCompanies();
             UpdatePrices();
         }
 
-        private async void CreateDb()
+        private async Task UpdateCompanies()
+        {
+            foreach (var company in portfolioDatabase.Orders.GroupBy(o => o.Ticker)) {
+                var buyOrders = company.Where(o => o.OrderType == (int)OrderType.Buy);
+                var buyAmount = buyOrders.Select(o => o.Amount).Sum();
+                var sellAmount = company.Where(o => o.OrderType == (int)OrderType.Sell).Select(o => o.Amount).Sum();
+                decimal owned = buyAmount - sellAmount;
+                decimal invested = 0;
+                foreach (var order in buyOrders)
+                {
+                    if (sellAmount <= 0) invested += order.Amount * order.Price;
+                    else if (sellAmount - order.Amount < 0) invested += (order.Amount - sellAmount) * order.Price;
+                    else if (sellAmount - order.Amount > 0) sellAmount -= order.Amount;
+                }
+                var price = await Test.Price(company.Key);
+                var newCompany = new Company(company.Key, Math.Round(owned, 2), Math.Round(invested / owned, 2), price);
+                Companies.Add(newCompany);
+            }
+        }
+
+        private async Task CreateDb()
         {
             this.portfolioDatabase = await MainDatabaseManager.CreateDb(this.portfolio);
         }
@@ -90,7 +119,7 @@ namespace PortfolioTracker.Database
         /// Updates prices in the database every minute
         /// </summary>
         /// <returns>Task performing the updates</returns>
-        public Task UpdatePrices() => Task.Run(async () =>
+        public async Task UpdatePrices() => await Task.Run(async () =>
         {
             await Task.Delay(1000);
             int secondsBetweenUpdates = 60;
@@ -131,7 +160,7 @@ namespace PortfolioTracker.Database
                 decimal currentValue = 0;
                 int numberOfOrders = 0;
                 bool success = true;
-
+                //TODO use this.Companies
                 var companies = portfolioDatabase.Orders.GroupBy(o => o.Ticker);
                 foreach (var company in companies)
                 {

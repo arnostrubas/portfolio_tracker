@@ -22,12 +22,10 @@ namespace PortfolioTracker.Views
     /// </summary>
     public partial class Overview : UserControl
     {
-        public PortfolioManager manager { get; private set; }
         public Overview(PortfolioManager manager)
         {
             InitializeComponent();
-            var overviewViewModel = new OverviewViewModel(manager);
-            DataContext = overviewViewModel;
+            DataContext = new OverviewViewModel(manager);
         }
     }
 }

@@ -12,6 +12,7 @@ namespace PortfolioTracker.ViewModels
 {
     public class AddPortfolioViewModel
     {
+        private readonly PortfolioManager _manager;
         public RelayCommand AddPortfolioCommand { get; set; }
         public RelayCommand DeletePortfolioCommand { get; set; }
         public ObservableCollection<string> Portfolios { get; set; }
@@ -19,10 +20,11 @@ namespace PortfolioTracker.ViewModels
         public string Name { get => name; set { name = value; AddPortfolioCommand.RaiseCanExecuteChanged(); 
                                                               DeletePortfolioCommand.RaiseCanExecuteChanged(); } }
         
-        public AddPortfolioViewModel() { 
+        public AddPortfolioViewModel(PortfolioManager manager) { 
             Portfolios = MainDatabaseManager.GetPortfolios();
             AddPortfolioCommand = new RelayCommand(AddPortfolio, CanAddPortfolio);
             DeletePortfolioCommand = new RelayCommand(DeletePortfolio, CanDeletePortfolio);
+            _manager = manager;
         }
 
         private bool CanAddPortfolio(object? obj) => Name != "" && Name is not null && !Name.Contains(' ') 

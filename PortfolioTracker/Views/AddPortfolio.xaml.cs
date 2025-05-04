@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using PortfolioTracker.Database;
 using PortfolioTracker.ViewModels;
 
 namespace PortfolioTracker.Views
@@ -21,11 +22,10 @@ namespace PortfolioTracker.Views
     /// </summary>
     public partial class AddPortfolio : UserControl
     {
-        public AddPortfolio()
+        public AddPortfolio(PortfolioManager manager)
         {
             InitializeComponent();
-            var addPortfolioViewModel = new AddPortfolioViewModel();
-            DataContext = addPortfolioViewModel;
+            DataContext = new AddPortfolioViewModel(manager);
         }
     }
 }

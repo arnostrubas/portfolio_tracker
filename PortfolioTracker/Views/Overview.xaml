@@ -35,7 +35,7 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <ListView d:ItemsSource="{d:SampleData ItemCount=2}">
+            <ListView ItemsSource="{Binding Companies}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn DisplayMemberBinding="{Binding Ticker}" Header="Company"/>

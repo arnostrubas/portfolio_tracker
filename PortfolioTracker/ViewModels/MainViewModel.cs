@@ -44,9 +44,9 @@ namespace PortfolioTracker.ViewModels
             ChangeToAddOrderCommand = new RelayCommand(ChangeToAddOrder, _ => true);
         }
         private void ChangeToOverview(object? obj) => CurrentView.Content = new Overview(_manager);
-        private void ChangeToOrders(object? obj) => CurrentView.Content = new Orders();
-        private void ChangeToAddPortfolio(object? obj) => CurrentView.Content = new AddPortfolio();
-        private void ChangeToAddOrder(object? obj) => CurrentView.Content = new AddOrder();
+        private void ChangeToOrders(object? obj) => CurrentView.Content = new Orders(_manager);
+        private void ChangeToAddPortfolio(object? obj) => CurrentView.Content = new AddPortfolio(_manager);
+        private void ChangeToAddOrder(object? obj) => CurrentView.Content = new AddOrder(_manager);
         private void ChangePortfolio(object? obj)
         {
             //_manager.Dispose();

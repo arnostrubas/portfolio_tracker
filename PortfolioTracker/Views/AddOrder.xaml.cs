@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using PortfolioTracker.Database;
+using PortfolioTracker.ViewModels;
 
 namespace PortfolioTracker.Views
 {
@@ -20,9 +22,10 @@ namespace PortfolioTracker.Views
     /// </summary>
     public partial class AddOrder : UserControl
     {
-        public AddOrder()
+        public AddOrder(PortfolioManager manager)
         {
             InitializeComponent();
+            DataContext = new AddOrderViewModel(manager);
         }
     }
 }
