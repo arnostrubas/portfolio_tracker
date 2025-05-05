@@ -22,14 +22,14 @@ namespace PortfolioTracker.ViewModels
         public ObservableCollection<string> Portfolios { get; set; }
         private PortfolioManager _manager;
         private string _selectedPortfolioName;
-        public string SelectedPortfolioName { 
-            get => _selectedPortfolioName ;
+        public string SelectedPortfolioName {
+            get => _selectedPortfolioName;
             set {
-                if (_selectedPortfolioName != value) { 
+                if (_selectedPortfolioName != value) {
                     _selectedPortfolioName = value;
                     ChangePortfolio(null);
-                }            
-            } 
+                }
+            }
         }
         public MainViewModel()
         {
@@ -42,16 +42,52 @@ namespace PortfolioTracker.ViewModels
             ChangeToOrdersCommand = new RelayCommand(ChangeToOrders, _ => true);
             ChangeToAddPortfolioCommand = new RelayCommand(ChangeToAddPortfolio, _ => true);
             ChangeToAddOrderCommand = new RelayCommand(ChangeToAddOrder, _ => true);
+            DelayedChangeToOverview();
         }
-        private void ChangeToOverview(object? obj) => CurrentView.Content = new Overview(_manager);
-        private void ChangeToOrders(object? obj) => CurrentView.Content = new Orders(_manager);
-        private void ChangeToAddPortfolio(object? obj) => CurrentView.Content = new AddPortfolio(_manager);
-        private void ChangeToAddOrder(object? obj) => CurrentView.Content = new AddOrder(_manager);
-        private void ChangePortfolio(object? obj)
+        private async void DelayedChangeToOverview()
         {
-            //_manager.Dispose();
+            ChangeToOverviewCommand.Execute(null);
+            await Task.Delay(1000);
+            ChangeToOverviewCommand.Execute(null);
+        }
+        private void ChangeToOverview(object? obj) 
+        {
+            try
+            {
+                CurrentView.Content = new Overview(_manager);
+            } 
+            catch { }
+         }
+        private void ChangeToOrders(object? obj)
+        {
+            try
+            {
+                CurrentView.Content = new Orders(_manager);
+            }
+            catch { }
+        }
+        private void ChangeToAddPortfolio(object? obj)
+        {
+            try
+            {
+                CurrentView.Content = new AddPortfolio(_manager);
+            }
+            catch { }
+        }
+        private void ChangeToAddOrder(object? obj)
+        {
+            try
+            {
+                CurrentView.Content = new AddOrder(_manager);
+            }
+            catch {  }
+        }
+        private async void ChangePortfolio(object? obj)
+        {
+            _manager.Dispose();
+            await Task.Delay(500);
             _manager = new PortfolioManager(_selectedPortfolioName);
-            CurrentView.Content = new Overview(_manager);
+            DelayedChangeToOverview();
         }
     }
 }

@@ -25,8 +25,7 @@ namespace PortfolioTracker.Views
         public Main()
         {
             InitializeComponent();
-            var mainViewModel= new MainViewModel();
-            DataContext = mainViewModel;
+            DataContext = new MainViewModel();
         }
     }
 }

@@ -14,7 +14,7 @@ namespace PortfolioTracker.ViewModels
 {
     public class OverviewViewModel
     {
-        private PortfolioManager _manager;
+        private readonly PortfolioManager _manager;
         public string Profit { get; set; } = "0.00";
         public string Invested { get; set; } = "0.00";
         public string CurrentValue { get; set; } = "0.00";
@@ -23,11 +23,11 @@ namespace PortfolioTracker.ViewModels
         public OverviewViewModel(PortfolioManager manager)
         {
             _manager = manager;
-            Companies = new(manager.Companies); 
-            Update(null);
+            Companies = new(_manager.Companies); 
+            Update();
         }
 
-        private void Update(object? obj)
+        private void Update()
         {
             Profit = "$" + Math.Round(_manager.portfolio.Profit, 2).ToString();
             if (_manager.portfolio.Profit > 0) ProfitColor = Brushes.Green;

@@ -7,25 +7,19 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:Background="White"  Height="450" Width="700">
     <StackPanel>
-        <Label Content="All orders" Height="33" FontSize="16" HorizontalContentAlignment="Left" Margin="0,5,0,0"/>
-        <ListView d:ItemsSource="{d:SampleData ItemCount=5}" Margin="0,0,10,0">
+        <Button Content="Delete Order" FontSize="18" Command="{Binding DeleteOrderCommand}" Width="152" Height="75"/>
+        <Label Content="All orders" Height="33" FontSize="16" HorizontalContentAlignment="Left" Margin="0,5,0,0" Width="80"/>
+        <ListView ItemsSource="{Binding Orders}" SelectedItem="{Binding SelectedOrder}" Margin="0,0,10,0" Width="380">
             <ListView.View>
                 <GridView>
                     <GridViewColumn DisplayMemberBinding="{Binding Ticker}" Header="Company" />
                     <GridViewColumn DisplayMemberBinding="{Binding OrderType}" Header="Type" />
                     <GridViewColumn DisplayMemberBinding="{Binding Amount}" Header="Amount" />
                     <GridViewColumn DisplayMemberBinding="{Binding Price}" Header="Price" />
-                    <GridViewColumn DisplayMemberBinding="{Binding Date}" Header="Name" />
-                    <GridViewColumn Header="   ">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Content="X" Command="{Binding DataContext.RemoveCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                        CommandParameter="{Binding}" HorizontalContentAlignment="Center"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Date}" Header="Date" />
                 </GridView>
             </ListView.View>
         </ListView>
+
     </StackPanel>
 </UserControl>

@@ -76,7 +76,7 @@ namespace PortfolioTracker.Database
             {
                 string[] parts = line.Split(';');
                 Stock stock = new(parts[2], decimal.Parse(parts[5]));
-                Order order = new(stock, int.Parse(parts[1]), decimal.Parse(parts[3]), DateTime.Parse(parts[4]));
+                Order order = new(stock, int.Parse(parts[1]), decimal.Parse(parts[3]), DateOnly.Parse(parts[4]));
                 return order;
             }
             catch (Exception ex)
