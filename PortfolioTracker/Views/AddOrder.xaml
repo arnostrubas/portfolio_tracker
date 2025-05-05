@@ -25,15 +25,15 @@
             </Grid>
             <StackPanel Grid.Row="1">
                 <Label Content="Add manually" Height="42" FontSize="22" HorizontalContentAlignment="Center" Margin="0,5,0,0"/>
-                <ComboBox Width="120" Height="27"/>
+                <ComboBox Width="120" Height="27" ItemsSource="{Binding OrderTypes}" SelectedValue="{Binding OrderType}"/>
                 <Label Content="Ticker" Height="26" FontSize="12" HorizontalContentAlignment="Center"/>
-                <TextBox TextWrapping="Wrap" Text="" HorizontalContentAlignment="Center" Width="120" Height="27" FontSize="16"/>
+                <TextBox TextWrapping="Wrap" Text="{Binding Ticker}" HorizontalContentAlignment="Center" Width="120" Height="27" FontSize="16"/>
                 <Label Content="Amount" Height="26" FontSize="12" HorizontalContentAlignment="Center"/>
-                <TextBox TextWrapping="Wrap" Text="" Width="120" Height="27" FontSize="16" TextAlignment="Center"/>
-                <DatePicker Margin="0,5,0,0" Width="120" Height="27"/>
+                <TextBox TextWrapping="Wrap" Text="{Binding Amount}" Width="120" Height="27" FontSize="16" TextAlignment="Center"/>
+                <DatePicker Margin="0,5,0,0" Width="120" Height="27" SelectedDate="{Binding Date}"/>
                 <Label Content="Price" Height="26" FontSize="12" HorizontalContentAlignment="Center"/>
-                <TextBox TextWrapping="Wrap" Text="" Width="120" Height="27" TextAlignment="Center" FontSize="16"/>
-                <Button Content="Add" Width="194" Margin="0,25,0,0" Height="45" FontSize="22"/>
+                <TextBox TextWrapping="Wrap" Text="{Binding Price}" Width="120" Height="27" TextAlignment="Center" FontSize="16"/>
+                <Button Content="Add" Command="{Binding AddOrderCommand}" Width="194" Margin="0,25,0,0" Height="45" FontSize="22"/>
             </StackPanel>
         </Grid>
 

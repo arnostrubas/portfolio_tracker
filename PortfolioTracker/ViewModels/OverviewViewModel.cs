@@ -19,15 +19,17 @@ namespace PortfolioTracker.ViewModels
         public string Invested { get; set; } = "0.00";
         public string CurrentValue { get; set; } = "0.00";
         public Brush ProfitColor { get; set; } = Brushes.Black;
+        public RelayCommand UpdateCommand { get; set; }
         public ObservableCollection<Company> Companies { get; set; }
         public OverviewViewModel(PortfolioManager manager)
         {
             _manager = manager;
-            Companies = new(_manager.Companies); 
-            Update();
+            Companies = new(_manager.Companies);
+            UpdateCommand = new RelayCommand(Update, _ => true);
+            UpdateCommand.Execute(null);
         }
 
-        private void Update()
+        private void Update(object? obj)
         {
             Profit = "$" + Math.Round(_manager.portfolio.Profit, 2).ToString();
             if (_manager.portfolio.Profit > 0) ProfitColor = Brushes.Green;
