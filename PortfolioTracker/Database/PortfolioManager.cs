@@ -57,6 +57,7 @@ namespace PortfolioTracker.Database
 
         private async Task UpdateCompanies()
         {
+            Companies = new List<Company>();
             foreach (var company in portfolioDatabase.Orders.GroupBy(o => o.Ticker)) {
                 var buyOrders = company.Where(o => o.OrderType == (int)OrderType.Buy);
                 var buyAmount = buyOrders.Select(o => o.Amount).Sum();
@@ -89,6 +90,7 @@ namespace PortfolioTracker.Database
         {
             portfolioDatabase.Orders.Add(order);
             await portfolioDatabase.SaveChangesAsync();
+            await UpdateCompanies();
         }
 
         /// <summary>
@@ -103,6 +105,7 @@ namespace PortfolioTracker.Database
                 portfolioDatabase.Orders.Remove(order);
                 await portfolioDatabase.SaveChangesAsync();
             }
+            await UpdateCompanies();
         }
 
         /// <summary>
@@ -152,29 +155,24 @@ namespace PortfolioTracker.Database
         /// <summary>
         /// Update the portfolioStats every minute
         /// </summary>
-        private async void UpdatePortfolioStats()
+        private void UpdatePortfolioStats()
         {
             try
             {
                 decimal invested = 0;
                 decimal currentValue = 0;
-                int numberOfOrders = 0;
                 bool success = true;
-                //TODO use this.Companies
-                var companies = portfolioDatabase.Orders.GroupBy(o => o.Ticker);
-                foreach (var company in companies)
+                foreach (var company in Companies)
                 {
                    try
                    {
-                       var result = await CompanyValue(company);
-                       invested += result.invested;
-                       currentValue += result.value;
-                       numberOfOrders += company.Count();
+                        invested += company.BuyPrice * company.Owned;
+                        currentValue += company.CurrentPrice * company.Owned;
                    }
                    catch
                    {
-                       success = false;
-                       break;
+                        success = false;
+                        break;
                    }
                 }
                 if (success)
@@ -185,38 +183,8 @@ namespace PortfolioTracker.Database
                     MainDatabaseManager.UpdatePortfolio(portfolio);
                 }
             }
-            catch
-            {
-            }
+            catch { }
         }
-        
-        /// <summary>
-        /// Calculates the value of a company
-        /// </summary>
-        /// <param name="company"></param>
-        /// <returns>How much is invested in the company and what is the current value</returns>
-        public async static Task<(decimal invested, decimal value)> CompanyValue(IGrouping<string, Order> company)
-        {
-            var buyOrders = company
-                .Where(o => o.OrderType == (int)OrderType.Buy);
-
-            var sellOrders = company
-                .Where(o => o.OrderType == (int)OrderType.Sell);
-
-            decimal buyAmount = buyOrders.Sum(o => o.Amount);
-            decimal sellAmount = sellOrders.Sum(o => o.Amount);
-            var value = (buyAmount - sellAmount) * await Test.Price(company.Key);
-
-            decimal invested = 0;
-            foreach (var order in buyOrders) {
-                if (sellAmount <= 0) invested += order.Amount * order.Price;
-                else if (sellAmount - order.Amount < 0) invested += (order.Amount - sellAmount) * order.Price;
-                else if (sellAmount - order.Amount > 0) sellAmount -= order.Amount;
-            }
-            
-            return (invested, value);
-        }
-
 
         public async void Dispose()
         {
