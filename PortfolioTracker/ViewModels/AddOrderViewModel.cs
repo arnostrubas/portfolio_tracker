@@ -22,26 +22,19 @@ namespace PortfolioTracker.ViewModels
         public RelayCommand ExportCommand { get; set; }
 
         private OrderType _orderType;
-        public OrderType OrderType { get => _orderType; set { _orderType = value; AddOrderCommand.RaiseCanExecuteChanged(); } }
-        public ObservableCollection<OrderType> OrderTypes { get; set; } = new((OrderType[])Enum.GetValues(typeof(OrderType)));
-
         private string _ticker = "";
-        public string Ticker { get => _ticker; set 
-            { 
-                _ticker = value; 
-                AddOrderCommand.RaiseCanExecuteChanged();
-            } 
-        }
         private string _amount = "0";
-        public string Amount { get => _amount; set { _amount = value; AddOrderCommand.RaiseCanExecuteChanged(); } }
+        private string _price = "0";
+        private DateOnly _date = DateOnly.FromDateTime(DateTime.Today);
+        private decimal decimalPrice;
         private decimal decimalAmount;
 
-        private DateOnly _date = DateOnly.FromDateTime(DateTime.Today);
+        public OrderType OrderType { get => _orderType; set { _orderType = value; AddOrderCommand.RaiseCanExecuteChanged(); } }
+        public string Ticker { get => _ticker; set { _ticker = value;  AddOrderCommand.RaiseCanExecuteChanged(); } }
+        public string Amount { get => _amount; set { _amount = value; AddOrderCommand.RaiseCanExecuteChanged(); } }
         public DateTime Date { get => DateTime.Parse(_date.ToString()); set { _date = DateOnly.FromDateTime(value); AddOrderCommand.RaiseCanExecuteChanged(); } }
-        
-        private string _price = "0";
         public string Price { get => _price; set { _price = value; AddOrderCommand.RaiseCanExecuteChanged(); } }
-        private decimal decimalPrice;
+        public ObservableCollection<OrderType> OrderTypes { get; set; } = new((OrderType[])Enum.GetValues(typeof(OrderType)));
 
         public AddOrderViewModel(PortfolioManager manager)
         { 

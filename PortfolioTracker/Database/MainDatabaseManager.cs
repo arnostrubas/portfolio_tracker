@@ -40,7 +40,7 @@ namespace PortfolioTracker.Database
 
         /// <summary>
         /// Removes a portfolio from the database.
-        /// Dispose manager after
+        /// Dispose PortfolioManager after
         /// </summary>
         public static async void RemovePortfolio(Portfolio portfolio)
         {

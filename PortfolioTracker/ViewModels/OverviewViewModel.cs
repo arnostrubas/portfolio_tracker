@@ -28,7 +28,6 @@ namespace PortfolioTracker.ViewModels
             UpdateCommand = new RelayCommand(Update, _ => true);
             UpdateCommand.Execute(null);
         }
-
         private void Update(object? obj)
         {
             Profit = "$" + Math.Round(_manager.portfolio.Profit, 2).ToString();

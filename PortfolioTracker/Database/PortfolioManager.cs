@@ -14,6 +14,7 @@ using System.IO;
 using PortfolioTracker.Enums;
 using System.Windows;
 using System.CodeDom;
+using PortfolioTracker.Commands;
 
 namespace PortfolioTracker.Database
 {
@@ -74,6 +75,7 @@ namespace PortfolioTracker.Database
                 var price = await Test.Price(company.Key);
                 var newCompany = new Company(company.Key, Math.Round(owned, 2), Math.Round(invested / owned, 2), price);
                 Companies.Add(newCompany);
+                Events.OnCompanyChanged(EventArgs.Empty);
             }
         }
 
@@ -108,7 +110,7 @@ namespace PortfolioTracker.Database
         /// </summary>
         /// <param name="order">Order returned from GetOrder</param>
         /// <returns></returns>
-        public async Task RemoveOrder(Order order)
+        public async Task RemoveOrder(Order? order)
         {
             await portfolioDatabase.Database.EnsureCreatedAsync();
             if (order != null) {
