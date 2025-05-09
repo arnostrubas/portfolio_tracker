@@ -6,10 +6,17 @@ namespace PortfolioTracker
     {
         public static async Task<decimal> Price(string ticker)
         {
-            var securities = await Yahoo.Symbols(ticker)
-                .Fields(Field.RegularMarketPrice)
-                .QueryAsync();
-            return (decimal)(securities[ticker][Field.RegularMarketPrice]);
+            try
+            {
+                var securities = await Yahoo.Symbols(ticker)
+                    .Fields(Field.RegularMarketPrice)
+                    .QueryAsync();
+                return (decimal)(securities[ticker][Field.RegularMarketPrice]);
+            }
+            catch 
+            {
+                throw new Exception("Stock doesnt exist");
+            }
         }
     }
 }

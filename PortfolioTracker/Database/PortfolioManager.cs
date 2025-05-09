@@ -13,6 +13,7 @@ using System.DirectoryServices;
 using System.IO;
 using PortfolioTracker.Enums;
 using System.Windows;
+using System.CodeDom;
 
 namespace PortfolioTracker.Database
 {
@@ -88,13 +89,18 @@ namespace PortfolioTracker.Database
         /// <returns></returns>
         public async Task AddOrder(Order order)
         {
-            if (!portfolioDatabase.Orders.Any(o => o.Ticker == order.Ticker && 
-                o.OrderType == order.OrderType && o.Amount == order.Amount && o.Price == order.Price))
+            try
             {
-                portfolioDatabase.Orders.Add(order);
-                await portfolioDatabase.SaveChangesAsync();
-                await UpdateCompanies();
+                await Test.Price(order.Ticker);
+                if (!portfolioDatabase.Orders.Any(o => o.Ticker == order.Ticker &&
+                    o.OrderType == order.OrderType && o.Amount == order.Amount && o.Price == order.Price))
+                {
+                    portfolioDatabase.Orders.Add(order);
+                    await portfolioDatabase.SaveChangesAsync();
+                    await UpdateCompanies();
+                }
             }
+            catch { }
         }
 
         /// <summary>

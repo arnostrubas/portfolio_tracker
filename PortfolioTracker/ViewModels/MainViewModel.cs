@@ -47,7 +47,7 @@ namespace PortfolioTracker.ViewModels
         private async void DelayedChangeToOverview()
         {
             ChangeToOverviewCommand.Execute(null);
-            await Task.Delay(1000);
+            await Task.Delay(5000);
             ChangeToOverviewCommand.Execute(null);
         }
         private void ChangeToOverview(object? obj) 
