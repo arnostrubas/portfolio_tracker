@@ -20,8 +20,8 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Button Content="Import" FontSize="22" Margin="5,5,5,5"/>
-                <Button Grid.Column="1" Content="Export" FontSize="22" Margin="5,5,5,5"/>
+                <Button Content="Import" FontSize="22" Margin="105,5,5,5" Command="{Binding ImportCommand}"/>
+                <Button Grid.Column="1" Content="Export" FontSize="22" Margin="5,5,105,5" Command="{Binding ExportCommand}"/>
             </Grid>
             <StackPanel Grid.Row="1">
                 <Label Content="Add manually" Height="42" FontSize="22" HorizontalContentAlignment="Center" Margin="0,5,0,0"/>

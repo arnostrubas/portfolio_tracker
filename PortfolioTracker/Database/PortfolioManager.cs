@@ -82,15 +82,19 @@ namespace PortfolioTracker.Database
         }
 
         /// <summary>
-        /// Adds an order to the database
+        /// Adds an order to the database (unless it already is in the database)
         /// </summary>
         /// <param name="order">Order to be added</param>
         /// <returns></returns>
         public async Task AddOrder(Order order)
         {
-            portfolioDatabase.Orders.Add(order);
-            await portfolioDatabase.SaveChangesAsync();
-            await UpdateCompanies();
+            if (!portfolioDatabase.Orders.Any(o => o.Ticker == order.Ticker && 
+                o.OrderType == order.OrderType && o.Amount == order.Amount && o.Price == order.Price))
+            {
+                portfolioDatabase.Orders.Add(order);
+                await portfolioDatabase.SaveChangesAsync();
+                await UpdateCompanies();
+            }
         }
 
         /// <summary>

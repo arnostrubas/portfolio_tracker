@@ -19,7 +19,7 @@
             </Grid.ColumnDefinitions>
             <StackPanel>
                 <Label Content="Invested" HorizontalContentAlignment="Center"/>
-                <TextBlock TextWrapping="Wrap" Text="{Binding Invested}" Height="30" TextAlignment="Center" FontSize="20"/>
+                <TextBlock TextWrapping="Wrap" Text="{Binding Invested}" Height="30" TextAlignment="Center" FontSize="20" />
             </StackPanel>
             <StackPanel Grid.Column="1">
                 <Label Content="Current Value" HorizontalContentAlignment="Center"/>

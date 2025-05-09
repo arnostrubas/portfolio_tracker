@@ -44,18 +44,17 @@ namespace PortfolioTracker.Database
         /// <param name="fileName">File from which the orders will be imported</param>
         /// <returns>Task performing the import</returns>
         /// <exception cref="Exception">Import failed + reason of exception</exception>
-        public static void CSVToDatabase(string fileName, PortfolioManager manager) => Task.Run(async () =>
+        public static void CSVToDatabase(string filePath, PortfolioManager manager) => Task.Run(async () =>
         {
             try
             {
-                string importPath = Path.Combine("..", "..", "..", "Export", fileName);
-                var csv = File.ReadLines(importPath);
+                var csv = File.ReadLines(filePath);
                 foreach (var line in csv.Skip(1))
                 {
                     if (line is not null)
                     {
                         var order = CsvLineToOrder(line);
-                        if (!manager.portfolioDatabase.Orders.Any(p => p.Equals(order))) await manager.AddOrder(order);
+                        await manager.AddOrder(order);
                     }
                 }
             }

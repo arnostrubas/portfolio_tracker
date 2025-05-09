@@ -4,7 +4,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Markup;
+using Microsoft.Win32;
 using PortfolioTracker.Commands;
 using PortfolioTracker.Database;
 using PortfolioTracker.Enums;
@@ -16,6 +18,8 @@ namespace PortfolioTracker.ViewModels
     {
         private readonly PortfolioManager _manager;
         public RelayCommand AddOrderCommand { get; set; }
+        public RelayCommand ImportCommand { get; set; }
+        public RelayCommand ExportCommand { get; set; }
 
         private OrderType _orderType;
         public OrderType OrderType { get => _orderType; set { _orderType = value; AddOrderCommand.RaiseCanExecuteChanged(); } }
@@ -43,10 +47,28 @@ namespace PortfolioTracker.ViewModels
         { 
             _manager = manager;
             AddOrderCommand = new RelayCommand(AddOrder, CanAddOrder);
+            ExportCommand = new RelayCommand(_ => Csv.DatabaseToCSV(_manager.portfolio, _manager.portfolioDatabase), _ => true);
+            ImportCommand = new RelayCommand(Import, _ => true);
         }
 
-        private bool CanAddOrder(object? obj) => Decimal.TryParse(_price, out decimalPrice) && decimalPrice != 0 && 
-                                                 Decimal.TryParse(_amount, out decimalAmount) && decimalAmount > 0;
+        private void Import(object? obj)
+        {
+            var openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "CSV Files (*.csv)|*.csv";
+            bool? result = openFileDialog.ShowDialog();
+
+            if (result == true)
+            {
+                string path = openFileDialog.FileName;
+                Csv.CSVToDatabase(path, _manager);
+            }
+        }
+
+        private bool CanAddOrder(object? obj)
+        { 
+            return Decimal.TryParse(_price, out decimalPrice) && decimalPrice != 0 &&
+                   Decimal.TryParse(_amount, out decimalAmount) && decimalAmount > 0;
+        }
         private void AddOrder(object? obj)
         {
             try
