@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PortfolioTracker.Models;
-using PortfolioTracker;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +15,7 @@ using System.Windows;
 using System.CodeDom;
 using PortfolioTracker.Commands;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using PortfolioTracker.API;
 
 namespace PortfolioTracker.Database
 {

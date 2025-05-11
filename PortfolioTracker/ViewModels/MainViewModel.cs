@@ -14,6 +14,7 @@ namespace PortfolioTracker.ViewModels
 {
     public class MainViewModel
     {
+        public RelayCommand RefreshCommand { get; set; }
         public RelayCommand ChangeToOverviewCommand { get; set; }
         public RelayCommand ChangeToOrdersCommand { get; set; }
         public RelayCommand ChangeToAddPortfolioCommand { get; set; }
@@ -40,6 +41,7 @@ namespace PortfolioTracker.ViewModels
             _selectedPortfolioName = firstPortfolio;
             _manager = new PortfolioManager(_selectedPortfolioName);
 
+            RefreshCommand = new RelayCommand(ChangePortfolio, _ => true);
             ChangeToOverviewCommand = new RelayCommand(ChangeToOverview, _ => true);
             ChangeToOrdersCommand = new RelayCommand(ChangeToOrders, _ => true);
             ChangeToAddPortfolioCommand = new RelayCommand(ChangeToAddPortfolio, _ => true);

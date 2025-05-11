@@ -1,6 +1,6 @@
 using YahooFinanceApi;
 
-namespace PortfolioTracker
+namespace PortfolioTracker.API
 {
     public static class StockPrice
     {
@@ -14,7 +14,7 @@ namespace PortfolioTracker
                 var securities = await Yahoo.Symbols(ticker)
                     .Fields(Field.RegularMarketPrice)
                     .QueryAsync();
-                return (decimal)(securities[ticker][Field.RegularMarketPrice]);
+                return (decimal)securities[ticker][Field.RegularMarketPrice];
             }
             catch 
             {

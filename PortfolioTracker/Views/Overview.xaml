@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PortfolioTracker.Views"
+             xmlns:oxy="http://oxyplot.org/wpf"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:Background="White"  Height="450" Width="700">
     <Grid>
@@ -46,7 +47,7 @@
                     </GridView>
                 </ListView.View>
             </ListView>
-            <Label Grid.Column="1" Content="Tady bude graf až se mi to bude chtít dělat xD&#xD;&#xA;" HorizontalAlignment="Center" Margin="0,146,0,0" VerticalAlignment="Top"/>
+            <oxy:PlotView Model="{Binding Pie}" Grid.Column="2"/>
         </Grid>
     </Grid>
 </UserControl>

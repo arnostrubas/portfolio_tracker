@@ -15,9 +15,13 @@
             <StackPanel Margin="5,0,5,0">
                 <TextBlock FontWeight="Bold" TextAlignment="Center"><Run Text="Portfolio"/></TextBlock>
                 <ComboBox Width="93" Height="25" ItemsSource="{Binding Portfolios}" SelectedItem="{Binding SelectedPortfolioName}"/>
+                <Button FontFamily="Segoe MDL2 Assets" FontSize="16" Margin="0,10,0,0" Command="{Binding RefreshCommand}" Width="35" Height="33">
+                    &#xE895;
+                </Button>
+
                 <Button Content="Overview" Margin="0,10,0,0" Command="{Binding ChangeToOverviewCommand}"/>
                 <Button Content="Orders" Margin="0,10,0,0" Command="{Binding ChangeToOrdersCommand}"/>
-                <Button Content="New portfolio" Margin="0,250,0,0" Command="{Binding ChangeToAddPortfolioCommand}" />
+                <Button Content="New portfolio" Margin="0,240,0,0" Command="{Binding ChangeToAddPortfolioCommand}" />
                 <Button Content="New Order" Margin="0,10,0,0" Command="{Binding ChangeToAddOrderCommand}"/>
             </StackPanel>
             <ContentControl Grid.Column="1" Content="{Binding CurrentView}" HorizontalAlignment="Left" Margin="5,0,0,0" Width="736"/>
