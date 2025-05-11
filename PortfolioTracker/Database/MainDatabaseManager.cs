@@ -14,7 +14,7 @@ namespace PortfolioTracker.Database
     {
         public static readonly MainDatabaseDbContext manager = new();
 
-        private static readonly ObservableCollection<string> portfolios = manager.PortfolioNames();
+        private static readonly ObservableCollection<string> portfolios = manager.NamesOfPortfolios();
         public static ObservableCollection<string> GetPortfolios() => portfolios;
 
         /// <summary>

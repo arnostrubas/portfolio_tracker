@@ -55,36 +55,36 @@ namespace PortfolioTracker.Database
 
         private async void Start(bool exists)
         {
-            if (!exists) await CreateDb();
+            if (!exists) PortfolioDatabase = await MainDatabaseManager.CreateDb(this.Portfolio);
             await UpdateCompanies();
             UpdatePrices();
         }
 
         private async Task UpdateCompanies()
         {
-            Companies = new List<Company>();
-            foreach (var company in PortfolioDatabase.Orders.GroupBy(o => o.Ticker)) {
-                var buyOrders = company.Where(o => o.OrderType == (int)OrderType.Buy);
-                var buyAmount = buyOrders.Select(o => o.Amount).Sum();
-                var sellAmount = company.Where(o => o.OrderType == (int)OrderType.Sell).Select(o => o.Amount).Sum();
-                decimal owned = buyAmount - sellAmount;
-                decimal invested = 0;
-                foreach (var order in buyOrders)
+            try
+            {
+                Companies = new List<Company>();
+                foreach (var company in PortfolioDatabase.Orders.GroupBy(o => o.Ticker))
                 {
-                    if (sellAmount <= 0) invested += order.Amount * order.Price;
-                    else if (sellAmount - order.Amount < 0) invested += (order.Amount - sellAmount) * order.Price;
-                    else if (sellAmount - order.Amount > 0) sellAmount -= order.Amount;
+                    var buyOrders = company.Where(o => o.OrderType == (int)OrderType.Buy);
+                    var buyAmount = buyOrders.Select(o => o.Amount).Sum();
+                    var sellAmount = company.Where(o => o.OrderType == (int)OrderType.Sell).Select(o => o.Amount).Sum();
+                    decimal owned = buyAmount - sellAmount;
+                    decimal invested = 0;
+                    foreach (var order in buyOrders)
+                    {
+                        if (sellAmount <= 0) invested += order.Amount * order.Price;
+                        else if (sellAmount - order.Amount < 0) invested += (order.Amount - sellAmount) * order.Price;
+                        else if (sellAmount - order.Amount > 0) sellAmount -= order.Amount;
+                    }
+                    var price = await StockPrice.Price(company.Key);
+                    var newCompany = new Company(company.Key, Math.Round(owned, 2), Math.Round(invested / owned, 2), price);
+                    Companies.Add(newCompany);
+                    UpdateHandler.OnUpdate();
                 }
-                var price = await Test.Price(company.Key);
-                var newCompany = new Company(company.Key, Math.Round(owned, 2), Math.Round(invested / owned, 2), price);
-                Companies.Add(newCompany);
-                UpdateHandler.OnUpdate(EventArgs.Empty);
             }
-        }
-
-        private async Task CreateDb()
-        {
-            this.PortfolioDatabase = await MainDatabaseManager.CreateDb(this.Portfolio);
+            catch { }
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace PortfolioTracker.Database
         {
             try
             {
-                await Test.Price(order.Ticker);
+                await StockPrice.Price(order.Ticker);
                 if (!PortfolioDatabase.Orders.Any(o => o.Ticker == order.Ticker &&
                     o.OrderType == order.OrderType && o.Amount == order.Amount && o.Price == order.Price))
                 {
@@ -116,13 +116,18 @@ namespace PortfolioTracker.Database
         /// <returns></returns>
         public async Task RemoveOrder(Order? order)
         {
-            await PortfolioDatabase.Database.EnsureCreatedAsync();
-            if (order != null) {
-                PortfolioDatabase.Orders.Remove(order);
-                await PortfolioDatabase.SaveChangesAsync();
+            try
+            {
+                await PortfolioDatabase.Database.EnsureCreatedAsync();
+                if (order != null)
+                {
+                    PortfolioDatabase.Orders.Remove(order);
+                    await PortfolioDatabase.SaveChangesAsync();
+                }
+                await UpdateCompanies();
+                UpdatePortfolioStats();
             }
-            await UpdateCompanies();
-            UpdatePortfolioStats();
+            catch { }
         }
 
         /// <summary>
@@ -132,7 +137,11 @@ namespace PortfolioTracker.Database
         /// <returns></returns>
         public async Task<Order?> GetOrder(int orderID)
         {
-            return await PortfolioDatabase.Orders.FirstOrDefaultAsync(p => p.Id == orderID);
+            try
+            {
+                return await PortfolioDatabase.Orders.FirstOrDefaultAsync(p => p.Id == orderID);
+            }
+            catch { return null; }
         }
 
         /// <summary>
@@ -152,7 +161,7 @@ namespace PortfolioTracker.Database
                     {
                         try
                         {
-                            order.CurrentPrice = await Test.Price(order.Ticker);
+                            order.CurrentPrice = await StockPrice.Price(order.Ticker);
                         }
                         catch
                         {
@@ -162,10 +171,7 @@ namespace PortfolioTracker.Database
                     await PortfolioDatabase.SaveChangesAsync().ContinueWith(_ => UpdatePortfolioStats());
                     await Task.Delay(secondsBetweenUpdates * 1000, cancellationToken);
                 }
-                catch
-                {
-                    throw new Exception();
-                }
+                catch { }
             }
         });
 
@@ -198,7 +204,7 @@ namespace PortfolioTracker.Database
                     Portfolio.CurrentValue = currentValue;
                     Portfolio.Profit = Portfolio.CurrentValue - Portfolio.Invested;
                     MainDatabaseManager.UpdatePortfolio(Portfolio);
-                    UpdateHandler.OnUpdate(EventArgs.Empty);
+                    UpdateHandler.OnUpdate();
                 }
             }
             catch { }
@@ -206,10 +212,14 @@ namespace PortfolioTracker.Database
 
         public async void Dispose()
         {
-            this.cancellationTokenSource.Cancel();
-            await Task.Delay(1000); // to give time for the tasks to end
-            this.cancellationTokenSource.Dispose();
-            PortfolioDatabase.Dispose();
+            try
+            {
+                this.cancellationTokenSource.Cancel();
+                await Task.Delay(1000); // to give time for the tasks to end
+                this.cancellationTokenSource.Dispose();
+                PortfolioDatabase.Dispose();
+            }
+            catch { }
         }
     }
 }

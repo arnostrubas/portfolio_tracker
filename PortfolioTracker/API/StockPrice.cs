@@ -2,8 +2,11 @@ using YahooFinanceApi;
 
 namespace PortfolioTracker
 {
-    public static class Test
+    public static class StockPrice
     {
+        /// <param name="ticker">Ticker of the company</param>
+        /// <returns>Price in decimal</returns>
+        /// <exception cref="Exception">If the ticker doesnt exist</exception>
         public static async Task<decimal> Price(string ticker)
         {
             try

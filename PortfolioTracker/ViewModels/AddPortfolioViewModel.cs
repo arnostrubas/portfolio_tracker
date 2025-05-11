@@ -19,7 +19,6 @@ namespace PortfolioTracker.ViewModels
         private string name = "";
         public string Name { get => name; set { name = value; AddPortfolioCommand.RaiseCanExecuteChanged(); 
                                                               DeletePortfolioCommand.RaiseCanExecuteChanged(); } }
-        
         public AddPortfolioViewModel(PortfolioManager manager) { 
             Portfolios = MainDatabaseManager.GetPortfolios();
             AddPortfolioCommand = new RelayCommand(AddPortfolio, CanAddPortfolio);
@@ -28,20 +27,23 @@ namespace PortfolioTracker.ViewModels
         }
 
         private bool CanAddPortfolio(object? obj) => Name != "" && Name is not null && !Name.Contains(' ') 
-                                                        && !MainDatabaseManager.manager.PortfolioNames().Contains(Name);
-
+                                                        && !MainDatabaseManager.manager.NamesOfPortfolios().Contains(Name);
+        private bool CanDeletePortfolio(object? obj) => Name != "" && Name is not null && MainDatabaseManager.manager.NamesOfPortfolios().Contains(Name);
+        
         private void AddPortfolio(object? obj) => new PortfolioManager(Name);
-
-        private bool CanDeletePortfolio(object? obj) => Name != "" && Name is not null && MainDatabaseManager.manager.PortfolioNames().Contains(Name);
         private void DeletePortfolio(object? obj)
         {
-            var portfolio = MainDatabaseManager.manager.Portfolios.FirstOrDefault(p => p.Name == Name);
-            if (portfolio != null)
+            try
             {
-                var tempManager = new PortfolioManager(portfolio.Name);
-                tempManager.PortfolioDatabase.Database.EnsureDeleted();
-                MainDatabaseManager.RemovePortfolio(portfolio);
+                var portfolio = MainDatabaseManager.manager.Portfolios.FirstOrDefault(p => p.Name == Name);
+                if (portfolio != null)
+                {
+                    var tempManager = new PortfolioManager(portfolio.Name);
+                    MainDatabaseManager.RemovePortfolio(portfolio);
+                    //TODO remove portfolio from server
+                }
             }
+            catch { }
         }
     }
 }

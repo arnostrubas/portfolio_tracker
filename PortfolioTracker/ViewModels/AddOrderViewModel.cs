@@ -46,15 +46,19 @@ namespace PortfolioTracker.ViewModels
 
         private void Import(object? obj)
         {
-            var openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "CSV Files (*.csv)|*.csv";
-            bool? result = openFileDialog.ShowDialog();
-
-            if (result == true)
+            try
             {
-                string path = openFileDialog.FileName;
-                Csv.CSVToDatabase(path, _manager);
+                var openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "CSV Files (*.csv)|*.csv";
+                bool? result = openFileDialog.ShowDialog();
+
+                if (result == true)
+                {
+                    string path = openFileDialog.FileName;
+                    Csv.CSVToDatabase(path, _manager);
+                }
             }
+            catch { }
         }
 
         private bool CanAddOrder(object? obj)
@@ -62,13 +66,13 @@ namespace PortfolioTracker.ViewModels
             return Decimal.TryParse(_price, out decimalPrice) && decimalPrice != 0 &&
                    Decimal.TryParse(_amount, out decimalAmount) && decimalAmount > 0;
         }
-        private void AddOrder(object? obj)
+        private async void AddOrder(object? obj)
         {
             try
             {
                 Stock stock = new(_ticker, decimalPrice);
                 Order order = new(stock, (int)_orderType, decimalAmount, _date);
-                _manager.AddOrder(order);
+                await _manager.AddOrder(order);
             } catch { }
         }
     }

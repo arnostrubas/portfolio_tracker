@@ -51,9 +51,9 @@ namespace PortfolioTracker.ViewModels
         public void OnUpdate(object sender, EventArgs e)
         {
             if (CurrentView.Content is Overview) ChangeToOverviewCommand.Execute(null);
-            if (CurrentView.Content is Orders) ChangeToOrdersCommand.Execute(null);
-            if (CurrentView.Content is AddPortfolio) ChangeToAddPortfolioCommand.Execute(null);
-            if (CurrentView.Content is AddOrder) ChangeToAddOrderCommand.Execute(null);
+            else if (CurrentView.Content is Orders) ChangeToOrdersCommand.Execute(null);
+            else if (CurrentView.Content is AddPortfolio) ChangeToAddPortfolioCommand.Execute(null);
+            else if (CurrentView.Content is AddOrder) ChangeToAddOrderCommand.Execute(null);
         }
 
         private void ChangeToOverview(object? obj) 
@@ -90,11 +90,15 @@ namespace PortfolioTracker.ViewModels
         }
         private async void ChangePortfolio(object? obj)
         {
-            _manager.Dispose();
-            await Task.Delay(500);
-            _manager = new PortfolioManager(_selectedPortfolioName);
-            ChangeToOverviewCommand.Execute(null);
-            _manager.UpdateHandler.Update += OnUpdate;
+            try
+            {
+                _manager.Dispose();
+                await Task.Delay(500);
+                _manager = new PortfolioManager(_selectedPortfolioName);
+                ChangeToOverviewCommand.Execute(null);
+                _manager.UpdateHandler.Update += OnUpdate;
+            }
+            catch { }
         }
     }
 }

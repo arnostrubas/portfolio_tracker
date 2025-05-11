@@ -7,6 +7,7 @@ namespace PortfolioTracker.Models
     public class Order
     {
         public int Id { get; set; }
+        //OrderType is stored as int, had some trouble with storing Enum in database
         public int OrderType { get; set; }
         public string Ticker { get; set; } = "";
         public Decimal Amount { get; set; }
