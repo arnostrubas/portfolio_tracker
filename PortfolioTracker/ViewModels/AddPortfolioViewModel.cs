@@ -28,7 +28,8 @@ namespace PortfolioTracker.ViewModels
 
         private bool CanAddPortfolio(object? obj) => Name != "" && Name is not null && !Name.Contains(' ') 
                                                         && !MainDatabaseManager.manager.NamesOfPortfolios().Contains(Name);
-        private bool CanDeletePortfolio(object? obj) => Name != "" && Name is not null && MainDatabaseManager.manager.NamesOfPortfolios().Contains(Name);
+        private bool CanDeletePortfolio(object? obj) => Name != "" && Name is not null && MainDatabaseManager.manager.NamesOfPortfolios().Contains(Name) 
+                                                        && _manager.Portfolio.Name != Name;
         
         private void AddPortfolio(object? obj) => new PortfolioManager(Name);
         private void DeletePortfolio(object? obj)
@@ -40,7 +41,8 @@ namespace PortfolioTracker.ViewModels
                 {
                     var tempManager = new PortfolioManager(portfolio.Name);
                     MainDatabaseManager.RemovePortfolio(portfolio);
-                    //TODO remove portfolio from server
+                    tempManager.PortfolioDatabase.Database.EnsureDeleted();
+                    tempManager.Dispose();
                 }
             }
             catch { }

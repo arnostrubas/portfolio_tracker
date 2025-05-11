@@ -7,10 +7,10 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:Background="White"  Height="450" Width="700">
     <StackPanel>
-        <Label Content="Select order if you want to delete it" Height="33" FontSize="16" HorizontalContentAlignment="Center"/>
+        <Label Content="Select order in order to delete it" Height="33" FontSize="16" HorizontalContentAlignment="Center"/>
         <Button Content="Delete Order" FontSize="18" Command="{Binding DeleteOrderCommand}" Width="152" Height="75"/>
         <Label Content="All orders" Height="33" FontSize="16" HorizontalContentAlignment="Left" Margin="0,5,0,0" Width="80"/>
-        <ListView ItemsSource="{Binding Orders}" SelectedItem="{Binding SelectedOrder}" Margin="0,0,10,0" Width="380">
+        <ListView ItemsSource="{Binding Orders}" SelectedItem="{Binding SelectedOrder}" Margin="0,0,10,0" Width="380" ScrollViewer.VerticalScrollBarVisibility="Visible" MaxHeight="200">
             <ListView.View>
                 <GridView>
                     <GridViewColumn DisplayMemberBinding="{Binding Ticker}" Header="Company" />
@@ -22,6 +22,5 @@
                 </GridView>
             </ListView.View>
         </ListView>
-
     </StackPanel>
 </UserControl>
