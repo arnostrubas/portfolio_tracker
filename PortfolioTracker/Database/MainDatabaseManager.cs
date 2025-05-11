@@ -61,7 +61,6 @@ namespace PortfolioTracker.Database
                     if (CurrentPortfolio != null)
                     {
                         CurrentPortfolio.CurrentValue = portfolio.CurrentValue;
-                        CurrentPortfolio.NumberOfOrders = portfolio.NumberOfOrders;
                         CurrentPortfolio.Profit = portfolio.Profit;
                         CurrentPortfolio.Invested = portfolio.Invested;
                         await manager.SaveChangesAsync();
