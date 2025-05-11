@@ -47,7 +47,7 @@
                     </GridView>
                 </ListView.View>
             </ListView>
-            <oxy:PlotView Model="{Binding Pie}" Grid.Column="2"/>
+            <oxy:PlotView Model="{Binding Pie}" Grid.Column="2" Margin="10" />
         </Grid>
     </Grid>
 </UserControl>
