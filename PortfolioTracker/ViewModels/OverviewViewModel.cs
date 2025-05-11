@@ -30,12 +30,12 @@ namespace PortfolioTracker.ViewModels
         }
         private void Update(object? obj)
         {
-            Profit = "$" + Math.Round(_manager.portfolio.Profit, 2).ToString();
-            if (_manager.portfolio.Profit > 0) ProfitColor = Brushes.Green;
-            else if (_manager.portfolio.Profit < 0) ProfitColor = Brushes.Red;
+            Profit = "$" + Math.Round(_manager.Portfolio.Profit, 2).ToString();
+            if (_manager.Portfolio.Profit > 0) ProfitColor = Brushes.Green;
+            else if (_manager.Portfolio.Profit < 0) ProfitColor = Brushes.Red;
 
-            Invested = "$" + Math.Round(_manager.portfolio.Invested, 2).ToString();
-            CurrentValue = "$" + Math.Round(_manager.portfolio.CurrentValue, 2).ToString();
+            Invested = "$" + Math.Round(_manager.Portfolio.Invested, 2).ToString();
+            CurrentValue = "$" + Math.Round(_manager.Portfolio.CurrentValue, 2).ToString();
         }
     }
 }

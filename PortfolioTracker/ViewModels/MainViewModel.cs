@@ -34,22 +34,28 @@ namespace PortfolioTracker.ViewModels
         public MainViewModel()
         {
             Portfolios = MainDatabaseManager.GetPortfolios();
-            _selectedPortfolioName = Portfolios.First();
+            var firstPortfolio = Portfolios.FirstOrDefault();
+            firstPortfolio ??= "Portfolio";
+
+            _selectedPortfolioName = firstPortfolio;
             _manager = new PortfolioManager(_selectedPortfolioName);
-            CurrentView.Content = new Overview(_manager);
 
             ChangeToOverviewCommand = new RelayCommand(ChangeToOverview, _ => true);
             ChangeToOrdersCommand = new RelayCommand(ChangeToOrders, _ => true);
             ChangeToAddPortfolioCommand = new RelayCommand(ChangeToAddPortfolio, _ => true);
             ChangeToAddOrderCommand = new RelayCommand(ChangeToAddOrder, _ => true);
-            DelayedChangeToOverview();
+            ChangeToOverviewCommand.Execute(null);
+            _manager.UpdateHandler.Update += OnUpdate;
         }
-        private async void DelayedChangeToOverview()
+
+        public void OnUpdate(object sender, EventArgs e)
         {
-            ChangeToOverviewCommand.Execute(null);
-            await Task.Delay(5000);
-            ChangeToOverviewCommand.Execute(null);
+            if (CurrentView.Content is Overview) ChangeToOverviewCommand.Execute(null);
+            if (CurrentView.Content is Orders) ChangeToOrdersCommand.Execute(null);
+            if (CurrentView.Content is AddPortfolio) ChangeToAddPortfolioCommand.Execute(null);
+            if (CurrentView.Content is AddOrder) ChangeToAddOrderCommand.Execute(null);
         }
+
         private void ChangeToOverview(object? obj) 
         {
             try
@@ -87,7 +93,8 @@ namespace PortfolioTracker.ViewModels
             _manager.Dispose();
             await Task.Delay(500);
             _manager = new PortfolioManager(_selectedPortfolioName);
-            DelayedChangeToOverview();
+            ChangeToOverviewCommand.Execute(null);
+            _manager.UpdateHandler.Update += OnUpdate;
         }
     }
 }

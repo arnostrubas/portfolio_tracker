@@ -6,6 +6,7 @@ namespace PortfolioTracker.Models
     [Table("PortfolioManager")]
     public class Portfolio
     {
+        //TODO remove numberOfOrders
         public int Id { get; set; }
         public string Name { get; set; } = "";
         public string ConnectionString { get; set; } = "";

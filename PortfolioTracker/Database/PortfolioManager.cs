@@ -15,6 +15,7 @@ using PortfolioTracker.Enums;
 using System.Windows;
 using System.CodeDom;
 using PortfolioTracker.Commands;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace PortfolioTracker.Database
 {
@@ -23,12 +24,13 @@ namespace PortfolioTracker.Database
     /// </summary>
     public class PortfolioManager : IDisposable
     {
-        public Portfolio portfolio {  get; private set; }
-        public PortfolioManagerDbContext portfolioDatabase { get; private set; } = null!;
+        public Portfolio Portfolio {  get; private set; }
+        public PortfolioManagerDbContext PortfolioDatabase { get; private set; } = null!;
 
         private readonly CancellationTokenSource cancellationTokenSource = new();
         private readonly CancellationToken cancellationToken = new();
         public List<Company> Companies { get; private set; } = new();
+        public Events UpdateHandler { get; set; }
 
         /// <summary>
         /// Constructor for PortfolioManager
@@ -37,14 +39,15 @@ namespace PortfolioTracker.Database
         /// <param name="portfolioName"> Name of the portfolio to be managed. </param>
         public PortfolioManager(string portfolioName)
         {
+            UpdateHandler = new Events();
             var exists = true;
             var existing = MainDatabaseManager.manager.Portfolios.FirstOrDefault(p => p.Name == portfolioName);
             if (existing != null) { 
-                portfolio = existing; 
-                portfolioDatabase = new PortfolioManagerDbContext(ConnectionString.GetConnectionString(portfolioName)); 
+                Portfolio = existing; 
+                PortfolioDatabase = new PortfolioManagerDbContext(ConnectionString.GetConnectionString(portfolioName)); 
             }
             else {
-                this.portfolio = new Portfolio(portfolioName);
+                this.Portfolio = new Portfolio(portfolioName);
                 exists = false;
             }
             Start(exists);
@@ -60,7 +63,7 @@ namespace PortfolioTracker.Database
         private async Task UpdateCompanies()
         {
             Companies = new List<Company>();
-            foreach (var company in portfolioDatabase.Orders.GroupBy(o => o.Ticker)) {
+            foreach (var company in PortfolioDatabase.Orders.GroupBy(o => o.Ticker)) {
                 var buyOrders = company.Where(o => o.OrderType == (int)OrderType.Buy);
                 var buyAmount = buyOrders.Select(o => o.Amount).Sum();
                 var sellAmount = company.Where(o => o.OrderType == (int)OrderType.Sell).Select(o => o.Amount).Sum();
@@ -75,13 +78,13 @@ namespace PortfolioTracker.Database
                 var price = await Test.Price(company.Key);
                 var newCompany = new Company(company.Key, Math.Round(owned, 2), Math.Round(invested / owned, 2), price);
                 Companies.Add(newCompany);
-                Events.OnCompanyChanged(EventArgs.Empty);
+                UpdateHandler.OnUpdate(EventArgs.Empty);
             }
         }
 
         private async Task CreateDb()
         {
-            this.portfolioDatabase = await MainDatabaseManager.CreateDb(this.portfolio);
+            this.PortfolioDatabase = await MainDatabaseManager.CreateDb(this.Portfolio);
         }
 
         /// <summary>
@@ -94,12 +97,13 @@ namespace PortfolioTracker.Database
             try
             {
                 await Test.Price(order.Ticker);
-                if (!portfolioDatabase.Orders.Any(o => o.Ticker == order.Ticker &&
+                if (!PortfolioDatabase.Orders.Any(o => o.Ticker == order.Ticker &&
                     o.OrderType == order.OrderType && o.Amount == order.Amount && o.Price == order.Price))
                 {
-                    portfolioDatabase.Orders.Add(order);
-                    await portfolioDatabase.SaveChangesAsync();
+                    PortfolioDatabase.Orders.Add(order);
+                    await PortfolioDatabase.SaveChangesAsync();
                     await UpdateCompanies();
+                    UpdatePortfolioStats();
                 }
             }
             catch { }
@@ -112,12 +116,13 @@ namespace PortfolioTracker.Database
         /// <returns></returns>
         public async Task RemoveOrder(Order? order)
         {
-            await portfolioDatabase.Database.EnsureCreatedAsync();
+            await PortfolioDatabase.Database.EnsureCreatedAsync();
             if (order != null) {
-                portfolioDatabase.Orders.Remove(order);
-                await portfolioDatabase.SaveChangesAsync();
+                PortfolioDatabase.Orders.Remove(order);
+                await PortfolioDatabase.SaveChangesAsync();
             }
             await UpdateCompanies();
+            UpdatePortfolioStats();
         }
 
         /// <summary>
@@ -127,7 +132,7 @@ namespace PortfolioTracker.Database
         /// <returns></returns>
         public async Task<Order?> GetOrder(int orderID)
         {
-            return await portfolioDatabase.Orders.FirstOrDefaultAsync(p => p.Id == orderID);
+            return await PortfolioDatabase.Orders.FirstOrDefaultAsync(p => p.Id == orderID);
         }
 
         /// <summary>
@@ -143,7 +148,7 @@ namespace PortfolioTracker.Database
                 try
                 {
                     secondsBetweenUpdates = 60;
-                    foreach (Order order in portfolioDatabase.Orders.Where(o => o.OrderType != (int)OrderType.Sell))
+                    foreach (Order order in PortfolioDatabase.Orders.Where(o => o.OrderType != (int)OrderType.Sell))
                     {
                         try
                         {
@@ -154,7 +159,7 @@ namespace PortfolioTracker.Database
                             secondsBetweenUpdates = 5;
                         }
                     }
-                    await portfolioDatabase.SaveChangesAsync().ContinueWith(_ => UpdatePortfolioStats());
+                    await PortfolioDatabase.SaveChangesAsync().ContinueWith(_ => UpdatePortfolioStats());
                     await Task.Delay(secondsBetweenUpdates * 1000, cancellationToken);
                 }
                 catch
@@ -189,10 +194,11 @@ namespace PortfolioTracker.Database
                 }
                 if (success)
                 {
-                    portfolio.Invested = invested;
-                    portfolio.CurrentValue = currentValue;
-                    portfolio.Profit = portfolio.CurrentValue - portfolio.Invested;
-                    MainDatabaseManager.UpdatePortfolio(portfolio);
+                    Portfolio.Invested = invested;
+                    Portfolio.CurrentValue = currentValue;
+                    Portfolio.Profit = Portfolio.CurrentValue - Portfolio.Invested;
+                    MainDatabaseManager.UpdatePortfolio(Portfolio);
+                    UpdateHandler.OnUpdate(EventArgs.Empty);
                 }
             }
             catch { }
@@ -203,7 +209,7 @@ namespace PortfolioTracker.Database
             this.cancellationTokenSource.Cancel();
             await Task.Delay(1000); // to give time for the tasks to end
             this.cancellationTokenSource.Dispose();
-            portfolioDatabase.Dispose();
+            PortfolioDatabase.Dispose();
         }
     }
 }

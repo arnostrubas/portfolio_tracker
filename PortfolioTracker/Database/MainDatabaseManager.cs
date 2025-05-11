@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Azure.Core;
+using PortfolioTracker.Commands;
 using PortfolioTracker.Models;
 
 namespace PortfolioTracker.Database

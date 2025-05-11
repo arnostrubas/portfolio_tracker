@@ -40,7 +40,7 @@ namespace PortfolioTracker.ViewModels
         { 
             _manager = manager;
             AddOrderCommand = new RelayCommand(AddOrder, CanAddOrder);
-            ExportCommand = new RelayCommand(_ => Csv.DatabaseToCSV(_manager.portfolio, _manager.portfolioDatabase), _ => true);
+            ExportCommand = new RelayCommand(_ => Csv.DatabaseToCSV(_manager.Portfolio, _manager.PortfolioDatabase), _ => true);
             ImportCommand = new RelayCommand(Import, _ => true);
         }
 

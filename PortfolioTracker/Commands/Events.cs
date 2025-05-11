@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace PortfolioTracker.Commands
 {
-    public static class Events
+    public class Events
     {
-        public static event EventHandler? CompanyChanged;
-        public static void OnCompanyChanged(EventArgs eventArgs)
+        public event EventHandler? Update;
+        public void OnUpdate(EventArgs eventArgs)
         {
-            CompanyChanged?.Invoke(null, EventArgs.Empty);
+            Update?.Invoke(null, EventArgs.Empty);
         }
     }
 }

@@ -36,8 +36,12 @@ namespace PortfolioTracker.ViewModels
         private void DeletePortfolio(object? obj)
         {
             var portfolio = MainDatabaseManager.manager.Portfolios.FirstOrDefault(p => p.Name == Name);
-            if (portfolio != null) MainDatabaseManager.RemovePortfolio(portfolio);
-            _manager.portfolioDatabase.Database.EnsureDeleted();
+            if (portfolio != null)
+            {
+                var tempManager = new PortfolioManager(portfolio.Name);
+                tempManager.PortfolioDatabase.Database.EnsureDeleted();
+                MainDatabaseManager.RemovePortfolio(portfolio);
+            }
         }
     }
 }

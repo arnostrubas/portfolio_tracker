@@ -21,7 +21,7 @@ namespace PortfolioTracker.ViewModels
         public OrdersViewModel(PortfolioManager manager) 
         { 
             _manager = manager;
-            Orders = new(_manager.portfolioDatabase.Orders);
+            Orders = new(_manager.PortfolioDatabase.Orders);
             DeleteOrderCommand = new RelayCommand(DeleteOrder, CanDeleteOrder);
         }
         private async void DeleteOrder(object? obj)
