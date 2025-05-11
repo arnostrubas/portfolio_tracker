@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore.Update.Internal;
 using PortfolioTracker.Commands;
 using PortfolioTracker.Database;
 using PortfolioTracker.Models;
+using PortfolioTracker.Views;
 
 namespace PortfolioTracker.ViewModels
 {
@@ -24,18 +25,24 @@ namespace PortfolioTracker.ViewModels
         public OverviewViewModel(PortfolioManager manager)
         {
             _manager = manager;
-            Companies = new(_manager.Companies);
+            Companies = [.. _manager.Companies];
             UpdateCommand = new RelayCommand(Update, _ => true);
             UpdateCommand.Execute(null);
+            _manager.UpdateHandler.Update += OnUpdate;
         }
         private void Update(object? obj)
         {
+            Companies = [.. _manager.Companies];
             Profit = "$" + Math.Round(_manager.Portfolio.Profit, 2).ToString();
             if (_manager.Portfolio.Profit > 0) ProfitColor = Brushes.Green;
             else if (_manager.Portfolio.Profit < 0) ProfitColor = Brushes.Red;
 
             Invested = "$" + Math.Round(_manager.Portfolio.Invested, 2).ToString();
             CurrentValue = "$" + Math.Round(_manager.Portfolio.CurrentValue, 2).ToString();
+        }
+        public void OnUpdate(object sender, EventArgs e)
+        {
+            UpdateCommand.Execute(null);
         }
     }
 }

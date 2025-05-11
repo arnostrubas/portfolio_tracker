@@ -45,10 +45,10 @@ namespace PortfolioTracker.ViewModels
             ChangeToAddPortfolioCommand = new RelayCommand(ChangeToAddPortfolio, _ => true);
             ChangeToAddOrderCommand = new RelayCommand(ChangeToAddOrder, _ => true);
             ChangeToOverviewCommand.Execute(null);
-            _manager.UpdateHandler.Update += OnUpdate;
+            _manager.UpdateHandler.Update += Update;
         }
 
-        public void OnUpdate(object sender, EventArgs e)
+        public void Update(object sender, EventArgs e)
         {
             if (CurrentView.Content is Overview) ChangeToOverviewCommand.Execute(null);
             else if (CurrentView.Content is Orders) ChangeToOrdersCommand.Execute(null);
@@ -92,11 +92,12 @@ namespace PortfolioTracker.ViewModels
         {
             try
             {
+                var newManager = new PortfolioManager(_selectedPortfolioName);
+                newManager.UpdateHandler.Update += Update;
                 _manager.Dispose();
                 await Task.Delay(500);
-                _manager = new PortfolioManager(_selectedPortfolioName);
+                _manager = newManager;
                 ChangeToOverviewCommand.Execute(null);
-                _manager.UpdateHandler.Update += OnUpdate;
             }
             catch { }
         }

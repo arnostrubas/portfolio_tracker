@@ -97,8 +97,8 @@ namespace PortfolioTracker.Database
             try
             {
                 await StockPrice.Price(order.Ticker);
-                if (!PortfolioDatabase.Orders.Any(o => o.Ticker == order.Ticker &&
-                    o.OrderType == order.OrderType && o.Amount == order.Amount && o.Price == order.Price))
+                if (!PortfolioDatabase.Orders.Any(o => o.Ticker == order.Ticker && o.OrderType == order.OrderType 
+                                                        && o.Amount == order.Amount && o.Price == order.Price))
                 {
                     PortfolioDatabase.Orders.Add(order);
                     await PortfolioDatabase.SaveChangesAsync();
