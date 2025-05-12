@@ -60,7 +60,7 @@ namespace PortfolioTracker.ViewModels
         }
         private void UpdatePie()
         {
-            Pie = new PlotModel { Title = "Market Share" };
+            Pie = new PlotModel { Title = "Total value of companies" };
 
             var pieSeries = new PieSeries
             {

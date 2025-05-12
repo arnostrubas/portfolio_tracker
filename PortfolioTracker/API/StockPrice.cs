@@ -12,9 +12,19 @@ namespace PortfolioTracker.API
             try
             {
                 var securities = await Yahoo.Symbols(ticker)
-                    .Fields(Field.RegularMarketPrice)
+                    .Fields(Field.RegularMarketPrice, Field.Currency)
                     .QueryAsync();
-                return (decimal)securities[ticker][Field.RegularMarketPrice];
+                double conversionRate = 1;
+                var currency = securities[ticker][Field.Currency];
+                if (currency != "USD")
+                {
+                    var rate = await Yahoo.Symbols(currency + "USD=X")
+                        .Fields(Field.RegularMarketPrice)
+                        .QueryAsync();
+                    conversionRate = rate[currency + "USD=X"][Field.RegularMarketPrice];
+                }    
+                return (decimal)securities[ticker][Field.RegularMarketPrice] * (decimal)conversionRate;
+                
             }
             catch 
             {
