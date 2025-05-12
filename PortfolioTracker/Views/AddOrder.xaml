@@ -7,35 +7,31 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:Background="White"  Height="450" Width="700">
     <Grid>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="2*"/>
-                <RowDefinition Height="7*"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Button Content="Import" FontSize="22" Margin="105,5,5,5" Command="{Binding ImportCommand}"/>
-                <Button Grid.Column="1" Content="Export" FontSize="22" Margin="5,5,105,5" Command="{Binding ExportCommand}"/>
-            </Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="557*"/>
+            <ColumnDefinition Width="143*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
             <StackPanel Grid.Row="1">
-                <Label Content="Add manually" Height="42" FontSize="22" HorizontalContentAlignment="Center" Margin="0,5,0,0"/>
-                <ComboBox Width="120" Height="27" ItemsSource="{Binding OrderTypes}" SelectedValue="{Binding OrderType}"/>
-                <Label Content="Ticker" Height="26" FontSize="12" HorizontalContentAlignment="Center"/>
-                <TextBox TextWrapping="Wrap" Text="{Binding Ticker}" HorizontalContentAlignment="Center" Width="120" Height="27" FontSize="16"/>
-                <Label Content="Amount" Height="26" FontSize="12" HorizontalContentAlignment="Center"/>
-                <TextBox TextWrapping="Wrap" Text="{Binding Amount}" Width="120" Height="27" FontSize="16" TextAlignment="Center"/>
-                <DatePicker Margin="0,5,0,0" Width="120" Height="27" SelectedDate="{Binding Date}"/>
-                <Label Content="Price" Height="26" FontSize="12" HorizontalContentAlignment="Center"/>
-                <TextBox TextWrapping="Wrap" Text="{Binding Price}" Width="120" Height="27" TextAlignment="Center" FontSize="16"/>
+                <Label Content="Add order manually" Height="42" FontSize="22" HorizontalContentAlignment="Center" Margin="0,5,0,0"/>
+                <Label Content="Order type" Height="26" FontSize="12" HorizontalContentAlignment="Center"/>
+                <ComboBox Width="150" Height="27" ItemsSource="{Binding OrderTypes}" SelectedValue="{Binding OrderType}"/>
+                <Label Content="Ticker of the company in caps (from Yahoo Finance)" Height="26" FontSize="12" HorizontalContentAlignment="Center"/>
+                <TextBox TextWrapping="Wrap" Text="{Binding Ticker}" HorizontalContentAlignment="Center" Width="150" Height="27" FontSize="16"/>
+                <Label Content="Amount of stocks bought" Height="26" FontSize="12" HorizontalContentAlignment="Center"/>
+                <TextBox TextWrapping="Wrap" Text="{Binding Amount}" Width="150" Height="27" FontSize="16" TextAlignment="Center"/>
+                <Label Content="Date when the stocks were bought" Height="26" FontSize="12" HorizontalContentAlignment="Center"/>
+                <DatePicker Margin="0,5,0,0" Width="150" Height="27" SelectedDate="{Binding Date}"/>
+                <Label Content="Price of the order" Height="26" FontSize="12" HorizontalContentAlignment="Center"/>
+                <TextBox TextWrapping="Wrap" Text="{Binding Price}" Width="150" Height="27" TextAlignment="Center" FontSize="16"/>
                 <Button Content="Add" Command="{Binding AddOrderCommand}" Width="194" Margin="0,25,0,0" Height="45" FontSize="22"/>
             </StackPanel>
         </Grid>
-
+        <StackPanel Grid.Column="1">
+            <Label FontSize="10" Content="You will be asked to select&#xD;&#xA;csv file to import" Height="53" Margin="10,10,10,0"/>
+            <Button Content="Import" FontSize="22" Command="{Binding ImportCommand}" Height="54" Margin="10,10,10,10"/>
+            <Label FontSize="10" Content="You can find export &#xD;&#xA;in PortfolioTracker\Export" Height="53" Margin="10,10,10,0"/>
+            <Button  Content="Export" FontSize="22" Command="{Binding ExportCommand}" Height="45" Margin="10,10,10,10"/>
+        </StackPanel>
     </Grid>
 </UserControl>

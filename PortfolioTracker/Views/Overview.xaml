@@ -36,7 +36,7 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <ListView ItemsSource="{Binding Companies}">
+            <ListView ItemsSource="{Binding Companies}" x:Name="ListView">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn DisplayMemberBinding="{Binding Ticker}" Header="Company"/>

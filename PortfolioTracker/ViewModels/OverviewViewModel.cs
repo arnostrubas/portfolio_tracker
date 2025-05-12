@@ -41,7 +41,7 @@ namespace PortfolioTracker.ViewModels
         }
         private void Update(object? obj)
         {
-            Companies = [.. _manager.Companies];
+            Companies = [.. _manager.Companies.OrderBy(c => c.Ticker)];
             _profit = _manager.Portfolio.Profit;
             _invested = _manager.Portfolio.Invested;
             _currentValue = _manager.Portfolio.CurrentValue;
