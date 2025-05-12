@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using Flurl.Http;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Update.Internal;
 using OxyPlot;
@@ -19,9 +20,12 @@ namespace PortfolioTracker.ViewModels
     public class OverviewViewModel
     {
         private readonly PortfolioManager _manager;
-        public string Profit { get; set; } = "0.00";
-        public string Invested { get; set; } = "0.00";
-        public string CurrentValue { get; set; } = "0.00";
+        private decimal _profit = 0;
+        private decimal _invested = 0;
+        private decimal _currentValue = 0;
+        public string Profit { get; private set; } = "0.00";
+        public string Invested { get; private set; } = "0.00";
+        public string CurrentValue { get; private set; } = "0.00";
         public Brush ProfitColor { get; set; } = Brushes.Black;
         public RelayCommand UpdateCommand { get; set; }
         public ObservableCollection<Company> Companies { get; set; }
@@ -38,12 +42,16 @@ namespace PortfolioTracker.ViewModels
         private void Update(object? obj)
         {
             Companies = [.. _manager.Companies];
-            Profit = "$" + Math.Round(_manager.Portfolio.Profit, 2).ToString();
+            _profit = _manager.Portfolio.Profit;
+            _invested = _manager.Portfolio.Invested;
+            _currentValue = _manager.Portfolio.CurrentValue;
+
+            Invested = "$" + Math.Round(_invested, 2).ToString();
+            CurrentValue = "$" + Math.Round(_currentValue, 2).ToString();
+            Profit = "$" + Math.Round(_profit, 2).ToString();
             if (_manager.Portfolio.Profit > 0) ProfitColor = Brushes.Green;
             else if (_manager.Portfolio.Profit < 0) ProfitColor = Brushes.Red;
 
-            Invested = "$" + Math.Round(_manager.Portfolio.Invested, 2).ToString();
-            CurrentValue = "$" + Math.Round(_manager.Portfolio.CurrentValue, 2).ToString();
             UpdatePie();
         }
         public void OnUpdate(object sender, EventArgs e)
@@ -65,7 +73,10 @@ namespace PortfolioTracker.ViewModels
             };
             foreach (var company in Companies.OrderByDescending(c => c.CurrentPrice * c.Owned))
             {
-                pieSeries.Slices.Add(new PieSlice(company.Ticker, (double)((company.CurrentPrice * company.Owned))));
+                double totalInvestment = (double)((company.CurrentPrice * company.Owned));
+                var text = company.Ticker;
+                var slice = new PieSlice(text, totalInvestment);
+                pieSeries.Slices.Add(slice);
             }
 
             Pie.Series.Add(pieSeries);

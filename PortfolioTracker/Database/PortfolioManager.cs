@@ -16,6 +16,7 @@ using System.CodeDom;
 using PortfolioTracker.Commands;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using PortfolioTracker.API;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace PortfolioTracker.Database
 {
@@ -58,33 +59,6 @@ namespace PortfolioTracker.Database
             if (!exists) PortfolioDatabase = await MainDatabaseManager.CreateDb(this.Portfolio);
             await UpdateCompanies();
             UpdatePrices();
-        }
-
-        private async Task UpdateCompanies()
-        {
-            try
-            {
-                Companies = new List<Company>();
-                foreach (var company in PortfolioDatabase.Orders.GroupBy(o => o.Ticker))
-                {
-                    var buyOrders = company.Where(o => o.OrderType == (int)OrderType.Buy);
-                    var buyAmount = buyOrders.Select(o => o.Amount).Sum();
-                    var sellAmount = company.Where(o => o.OrderType == (int)OrderType.Sell).Select(o => o.Amount).Sum();
-                    decimal owned = buyAmount - sellAmount;
-                    decimal invested = 0;
-                    foreach (var order in buyOrders)
-                    {
-                        if (sellAmount <= 0) invested += order.Amount * order.Price;
-                        else if (sellAmount - order.Amount < 0) invested += (order.Amount - sellAmount) * order.Price;
-                        else if (sellAmount - order.Amount > 0) sellAmount -= order.Amount;
-                    }
-                    var price = await StockPrice.Price(company.Key);
-                    var newCompany = new Company(company.Key, Math.Round(owned, 2), Math.Round(invested / owned, 2), price);
-                    Companies.Add(newCompany);
-                    UpdateHandler.OnUpdate();
-                }
-            }
-            catch { }
         }
 
         /// <summary>
@@ -175,6 +149,33 @@ namespace PortfolioTracker.Database
             }
         });
 
+        private async Task UpdateCompanies()
+        {
+            try
+            {
+                Companies = new List<Company>();
+                foreach (var company in PortfolioDatabase.Orders.GroupBy(o => o.Ticker))
+                {
+                    var buyOrders = company.Where(o => o.OrderType == (int)OrderType.Buy);
+                    var buyAmount = buyOrders.Select(o => o.Amount).Sum();
+                    var sellAmount = company.Where(o => o.OrderType == (int)OrderType.Sell).Select(o => o.Amount).Sum();
+                    decimal owned = buyAmount - sellAmount;
+                    decimal invested = 0;
+                    foreach (var order in buyOrders)
+                    {
+                        if (sellAmount <= 0) invested += order.Amount * order.Price;
+                        else if (sellAmount - order.Amount < 0) invested += (order.Amount - sellAmount) * order.Price;
+                        else if (sellAmount - order.Amount > 0) sellAmount -= order.Amount;
+                    }
+                    var price = await TryGetPrice(company.First());
+                    var newCompany = new Company(company.Key, Math.Round(owned, 2), Math.Round(invested / owned, 2), price);
+                    Companies.Add(newCompany);
+                    UpdateHandler.OnUpdate();
+                }
+            }
+            catch { }
+        }
+
         /// <summary>
         /// Update the portfolioStats every minute
         /// </summary>
@@ -208,6 +209,22 @@ namespace PortfolioTracker.Database
                 }
             }
             catch { }
+        }
+
+        /// <summary>
+        /// Tries to fetch current price of stock in order, if unsuccessful, returns last price from database
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        private async Task<decimal> TryGetPrice(Order order)
+        {
+            var price = order.CurrentPrice;
+            try
+            {
+                price = await StockPrice.Price(order.Ticker);
+            }
+            catch { }
+            return price;
         }
 
         public async void Dispose()
