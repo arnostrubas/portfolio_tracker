@@ -40,7 +40,13 @@
                     <GridViewColumn DisplayMemberBinding="{Binding Amount}" Header="Amount" Width="Auto"/>
                     <GridViewColumn DisplayMemberBinding="{Binding Price}" Header="Buy/Sell Price" Width="Auto"/>
                     <GridViewColumn DisplayMemberBinding="{Binding CurrentPrice}" Header="Current Price" Width="Auto"/>
-                    <GridViewColumn DisplayMemberBinding="{Binding Date}" Header="Date" Width="Auto"/>
+                    <GridViewColumn Header="Date">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Date, StringFormat='{}{0:dd/MM/yyyy}'}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>
