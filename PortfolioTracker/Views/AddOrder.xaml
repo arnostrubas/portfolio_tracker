@@ -29,7 +29,7 @@
                         <ColumnDefinition Width="150"/>
                     </Grid.ColumnDefinitions>
                     <TextBox Background="#BFDBFE" Grid.Column="0" Text="{Binding Ticker}" Width="150" Height="27" FontSize="16" TextAlignment="Center" HorizontalAlignment="Right"/>
-                    <Label Foreground="#1E3A8A" FontWeight="Bold" FontSize="14" Margin="10,0,-32,0" Grid.Column="1" Content="Company ticker (Yahoo)" VerticalAlignment="Center" HorizontalContentAlignment="Left"/>
+                    <Label Foreground="#1E3A8A" FontWeight="Bold" FontSize="14" Margin="10,0,-32,0" Grid.Column="1" Content="Company ticker" VerticalAlignment="Center" HorizontalContentAlignment="Left"/>
                 </Grid>
 
                 <Grid Margin="0,5" Height="40">
@@ -64,7 +64,7 @@
                         <ColumnDefinition Width="200"/>
                         <ColumnDefinition Width="150"/>
                     </Grid.ColumnDefinitions>
-                    <Label Foreground="#1E3A8A" FontWeight="Bold" FontSize="14" Margin="10,0" Grid.Column="1" Content="Buy price"  VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                    <Label Foreground="#1E3A8A" FontWeight="Bold" FontSize="14" Margin="10,0" Grid.Column="1" Content="Buy/Sell price"  VerticalAlignment="Center" HorizontalAlignment="Left"/>
                     <TextBox Background="#BFDBFE" Grid.Column="0" Text="{Binding Price}" Width="150" Height="27" FontSize="16" TextAlignment="Center" HorizontalAlignment="Right"/>
                 </Grid>
 

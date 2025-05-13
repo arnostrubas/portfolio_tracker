@@ -38,7 +38,7 @@
                     <GridViewColumn DisplayMemberBinding="{Binding Ticker}" Header="Company" Width="Auto"/>
                     <GridViewColumn DisplayMemberBinding="{Binding OrderType}" Header="Type" Width="Auto"/>
                     <GridViewColumn DisplayMemberBinding="{Binding Amount}" Header="Amount" Width="Auto"/>
-                    <GridViewColumn DisplayMemberBinding="{Binding Price}" Header="Buy Price" Width="Auto"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Price}" Header="Buy/Sell Price" Width="Auto"/>
                     <GridViewColumn DisplayMemberBinding="{Binding CurrentPrice}" Header="Current Price" Width="Auto"/>
                     <GridViewColumn DisplayMemberBinding="{Binding Date}" Header="Date" Width="Auto"/>
                 </GridView>

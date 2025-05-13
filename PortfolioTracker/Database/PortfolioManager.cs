@@ -119,7 +119,7 @@ namespace PortfolioTracker.Database
                 try
                 {
                     secondsBetweenUpdates = 60;
-                    foreach (Order order in PortfolioDatabase.Orders.Where(o => o.OrderType != (int)OrderType.Sell))
+                    foreach (Order order in PortfolioDatabase.Orders)
                     {
                         try
                         {
