@@ -93,7 +93,6 @@ namespace PortfolioTracker.ViewModels
             {
                 var newManager = new PortfolioManager(_selectedPortfolioName);
                 newManager.UpdateHandler.Update += Update;
-                _manager.Dispose();
                 await Task.Delay(500);
                 _manager = newManager;
                 ChangeToOverviewCommand.Execute(null);
