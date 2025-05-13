@@ -5,33 +5,78 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PortfolioTracker.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:Background="White"  Height="450" Width="700">
+             d:DesignHeight="450" d:Background="#F0F8FF" Height="450" Width="700">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="557*"/>
-            <ColumnDefinition Width="143*"/>
+            <ColumnDefinition Width="509*"/>
+            <ColumnDefinition Width="191*"/>
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
-            <StackPanel Grid.Row="1">
-                <Label Content="Add order manually" Height="42" FontSize="22" HorizontalContentAlignment="Center" Margin="0,5,0,0"/>
-                <Label Content="Order type" Height="26" FontSize="12" HorizontalContentAlignment="Center"/>
-                <ComboBox Width="150" Height="27" ItemsSource="{Binding OrderTypes}" SelectedValue="{Binding OrderType}"/>
-                <Label Content="Company ticker in caps (from Yahoo Finance)" Height="26" FontSize="12" HorizontalContentAlignment="Center"/>
-                <TextBox TextWrapping="Wrap" Text="{Binding Ticker}" HorizontalContentAlignment="Center" Width="150" Height="27" FontSize="16"/>
-                <Label Content="Number of stock bought" Height="26" FontSize="12" HorizontalContentAlignment="Center"/>
-                <TextBox TextWrapping="Wrap" Text="{Binding Amount}" Width="150" Height="27" FontSize="16" TextAlignment="Center"/>
-                <Label Content="Date when the stocks were bought" Height="26" FontSize="12" HorizontalContentAlignment="Center"/>
-                <DatePicker Margin="0,5,0,0" Width="150" Height="27" SelectedDate="{Binding Date}"/>
-                <Label Content="Price of the order" Height="26" FontSize="12" HorizontalContentAlignment="Center"/>
-                <TextBox TextWrapping="Wrap" Text="{Binding Price}" Width="150" Height="27" TextAlignment="Center" FontSize="16"/>
-                <Button Content="Add" Command="{Binding AddOrderCommand}" Width="194" Margin="0,25,0,0" Height="45" FontSize="22"/>
+            <StackPanel Grid.Row="1" HorizontalAlignment="Center">
+                <Label Foreground="#1E3A8A" FontWeight="Bold" Content="Add order manually" Height="42" FontSize="22" HorizontalContentAlignment="Center" Margin="0,5,0,15" />
+                <Grid Margin="0,5" Height="40">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="150"/>
+                    </Grid.ColumnDefinitions>
+                    <ComboBox Grid.Column="0" Width="150" Height="27" ItemsSource="{Binding OrderTypes}" SelectedValue="{Binding OrderType}" HorizontalAlignment="Right"/>
+                    <Label VerticalAlignment="Center" Foreground="#1E3A8A" FontWeight="Bold" FontSize="14" Margin="10, 0" Grid.Column="1" Content="Order type" HorizontalContentAlignment="Left"/>
+                </Grid>
+
+                <Grid Margin="0,5" Height="40">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="150"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Background="#BFDBFE" Grid.Column="0" Text="{Binding Ticker}" Width="150" Height="27" FontSize="16" TextAlignment="Center" HorizontalAlignment="Right"/>
+                    <Label Foreground="#1E3A8A" FontWeight="Bold" FontSize="14" Margin="10,0,-32,0" Grid.Column="1" Content="Company ticker (Yahoo)" VerticalAlignment="Center" HorizontalContentAlignment="Left"/>
+                </Grid>
+
+                <Grid Margin="0,5" Height="40">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="150"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Foreground="#1E3A8A" FontWeight="Bold" FontSize="14" Margin="10,0" Grid.Column="1" Content="Stock amount" VerticalAlignment="Center" HorizontalContentAlignment="Left"/>
+                    <TextBox Background="#BFDBFE" Grid.Column="0" Text="{Binding Amount}" Width="150" Height="27" FontSize="16" TextAlignment="Center" HorizontalAlignment="Right"/>
+                </Grid>
+
+                <Grid Margin="0,5" Height="40">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="150"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Foreground="#1E3A8A" FontWeight="Bold" FontSize="14" Grid.Column="1" Content="Buy date" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0"/>
+                    <DatePicker Background="#BFDBFE" Grid.Column="0" Width="150" Height="27" SelectedDate="{Binding Date}" HorizontalAlignment="Right">
+                        <DatePicker.Resources>
+                            <Style TargetType="DatePickerTextBox">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Foreground" Value="#1E3A8A"/>
+                                <Setter Property="BorderBrush" Value="{x:Null}"/>
+                            </Style>
+                        </DatePicker.Resources>
+                    </DatePicker>
+
+                </Grid>
+
+                <Grid Margin="0,5" Height="40">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="150"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Foreground="#1E3A8A" FontWeight="Bold" FontSize="14" Margin="10,0" Grid.Column="1" Content="Buy price"  VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                    <TextBox Background="#BFDBFE" Grid.Column="0" Text="{Binding Price}" Width="150" Height="27" FontSize="16" TextAlignment="Center" HorizontalAlignment="Right"/>
+                </Grid>
+
+                <Button Content="Add" Command="{Binding AddOrderCommand}" Width="194" Height="45" FontSize="22" Margin="0,25,0,0" HorizontalAlignment="Center" Background="#93C5FD" Foreground="Black" BorderBrush="{x:Null}"/>
             </StackPanel>
+
         </Grid>
         <StackPanel Grid.Column="1">
-            <Label FontSize="10" Content="You will be asked to &#xD;&#xA;select csv file to import" Height="53" Margin="10,10,10,0"/>
-            <Button Content="Import" FontSize="22" Command="{Binding ImportCommand}" Height="54" Margin="10,10,10,10"/>
-            <Label FontSize="10" Content="You can find export &#xD;&#xA;in PortfolioTracker\Export" Height="53" Margin="10,10,10,0"/>
-            <Button  Content="Export" FontSize="22" Command="{Binding ExportCommand}" Height="45" Margin="10,10,10,10"/>
+            <Label Margin="0,30,0,0" Foreground="#1E3A8A" FontWeight="Bold" FontSize="13" Content="Select .csv file to import" Height="32" HorizontalContentAlignment="Center"/>
+            <Button Content="Import" FontSize="20" Command="{Binding ImportCommand}" Height="45" Margin="10,0,10,10" Background="#93C5FD" Foreground="Black" BorderBrush="{x:Null}"/>
+            <Label Foreground="#1E3A8A" FontWeight="Bold" FontSize="13" Content="Export in &#xD;&#xA;PortfolioTracker\Export" Height="53" Margin="10,10,10,0" HorizontalContentAlignment="Center"/>
+            <Button Content="Export" FontSize="20" Command="{Binding ExportCommand}" Height="45" Margin="10,0,10,10" Background="#93C5FD" Foreground="Black" BorderBrush="{x:Null}"/>
         </StackPanel>
     </Grid>
 </UserControl>

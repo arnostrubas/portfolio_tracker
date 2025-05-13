@@ -23,7 +23,7 @@ namespace PortfolioTracker.API
                         .QueryAsync();
                     conversionRate = rate[currency + "USD=X"][Field.RegularMarketPrice];
                 }
-                return (decimal)securities[ticker][Field.RegularMarketPrice] * (decimal)conversionRate;
+                return Math.Round((decimal)securities[ticker][Field.RegularMarketPrice] * (decimal)conversionRate, 2);
 
             }
             catch

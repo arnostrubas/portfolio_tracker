@@ -5,22 +5,46 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PortfolioTracker.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:Background="White"  Height="450" Width="700">
+             d:DesignHeight="450" d:Background="#F0F8FF"  Height="450" Width="700">
     <StackPanel>
-        <Label Content="Select order in order to delete it" Height="33" FontSize="16" HorizontalContentAlignment="Center"/>
-        <Button Content="Delete Order" FontSize="18" Command="{Binding DeleteOrderCommand}" Width="152" Height="75"/>
-        <Label Content="All orders" Height="33" FontSize="16" HorizontalContentAlignment="Left" Margin="0,5,0,0" Width="80"/>
-        <ListView ItemsSource="{Binding Orders}" SelectedItem="{Binding SelectedOrder}" Margin="0,0,10,0" Width="380" ScrollViewer.VerticalScrollBarVisibility="Visible" MaxHeight="200">
+        <Label Foreground="#1E3A8A" FontWeight="Bold" Content="All orders" Height="33" FontSize="16" HorizontalContentAlignment="Left" Margin="0,5,0,0" Width="89"/>
+        <ListView ItemsSource="{Binding Orders}"
+          SelectedItem="{Binding SelectedOrder}"
+          Margin="0,0,10,0"
+          Width="393"
+          MaxHeight="200"
+          Background="#E0F2FE"
+          BorderThickness="1"
+          BorderBrush="{x:Null}"
+          ScrollViewer.VerticalScrollBarVisibility="Visible">
+
+            <ListView.Resources>
+
+                <Style TargetType="GridViewColumnHeader">
+                    <Setter Property="Background" Value="#BFDBFE"/>
+                    <Setter Property="Foreground" Value="#1E3A8A"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="Padding" Value="8,4"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                    <Setter Property="BorderBrush" Value="{x:Null}"/>
+                    <Setter Property="FontSize" Value="9"/>
+                    <Setter Property="IsHitTestVisible" Value="False"/>
+                </Style>
+            </ListView.Resources>
+
             <ListView.View>
                 <GridView>
-                    <GridViewColumn DisplayMemberBinding="{Binding Ticker}" Header="Company" />
-                    <GridViewColumn DisplayMemberBinding="{Binding OrderType}" Header="Type" />
-                    <GridViewColumn DisplayMemberBinding="{Binding Amount}" Header="Amount" />
-                    <GridViewColumn DisplayMemberBinding="{Binding Price}" Header="Buy Price" />
-                    <GridViewColumn DisplayMemberBinding="{Binding CurrentPrice}" Header="Current price" />
-                    <GridViewColumn DisplayMemberBinding="{Binding Date}" Header="Date" />
+                    <GridViewColumn DisplayMemberBinding="{Binding Ticker}" Header="Company" Width="Auto"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding OrderType}" Header="Type" Width="Auto"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Amount}" Header="Amount" Width="Auto"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Price}" Header="Buy Price" Width="Auto"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding CurrentPrice}" Header="Current Price" Width="Auto"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Date}" Header="Date" Width="Auto"/>
                 </GridView>
             </ListView.View>
         </ListView>
+        <Label Foreground="#1E3A8A" FontWeight="Bold" Content="Select order in order to delete it" Height="33" FontSize="16" HorizontalContentAlignment="Center"/>
+        <Button Content="Delete Order" FontSize="18" Command="{Binding DeleteOrderCommand}" Width="152" Height="57" Background="#93C5FD" Foreground="Black" BorderBrush="{x:Null}" />
     </StackPanel>
 </UserControl>

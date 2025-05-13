@@ -51,7 +51,7 @@ namespace PortfolioTracker.ViewModels
         }
         private void UpdatePie()
         {
-            Pie = new PlotModel { Title = "Total value of companies" };
+            Pie = new PlotModel { Title = "Total value of companies", TitleColor = OxyColor.FromRgb(0x1E, 0x3A, 0x8A) };
 
             var pieSeries = new PieSeries
             {
@@ -60,7 +60,7 @@ namespace PortfolioTracker.ViewModels
                 AngleSpan = 360,
                 StartAngle = 270,
                 InsideLabelFormat = "{1}: ${0:0}",
-                OutsideLabelFormat = null
+                OutsideLabelFormat = null,
             };
             foreach (var company in Companies.OrderByDescending(c => c.CurrentPrice * c.Owned))
             {

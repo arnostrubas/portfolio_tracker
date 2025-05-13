@@ -23,7 +23,7 @@ namespace PortfolioTracker.ViewModels
         private decimal decimalAmount;
 
         public OrderType OrderType { get => _orderType; set { _orderType = value; AddOrderCommand.RaiseCanExecuteChanged(); } }
-        public string Ticker { get => _ticker; set { _ticker = value; AddOrderCommand.RaiseCanExecuteChanged(); } }
+        public string Ticker { get => _ticker; set { _ticker = value.ToUpper(); AddOrderCommand.RaiseCanExecuteChanged(); } }
         public string Amount { get => _amount; set { _amount = value; AddOrderCommand.RaiseCanExecuteChanged(); } }
         public DateTime Date { get => DateTime.Parse(_date.ToString()); set { _date = DateOnly.FromDateTime(value); AddOrderCommand.RaiseCanExecuteChanged(); } }
         public string Price { get => _price; set { _price = value; AddOrderCommand.RaiseCanExecuteChanged(); } }
