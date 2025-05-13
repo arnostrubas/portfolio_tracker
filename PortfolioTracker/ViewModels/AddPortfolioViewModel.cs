@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using PortfolioTracker.Commands;
 using PortfolioTracker.Database;
-using PortfolioTracker.Models;
 
 namespace PortfolioTracker.ViewModels
 {
@@ -17,20 +11,27 @@ namespace PortfolioTracker.ViewModels
         public RelayCommand DeletePortfolioCommand { get; set; }
         public ObservableCollection<string> Portfolios { get; set; }
         private string name = "";
-        public string Name { get => name; set { name = value; AddPortfolioCommand.RaiseCanExecuteChanged(); 
-                                                              DeletePortfolioCommand.RaiseCanExecuteChanged(); } }
-        public AddPortfolioViewModel(PortfolioManager manager) { 
+        public string Name
+        {
+            get => name; set
+            {
+                name = value; AddPortfolioCommand.RaiseCanExecuteChanged();
+                DeletePortfolioCommand.RaiseCanExecuteChanged();
+            }
+        }
+        public AddPortfolioViewModel(PortfolioManager manager)
+        {
             Portfolios = MainDatabaseManager.GetPortfolios();
             AddPortfolioCommand = new RelayCommand(AddPortfolio, CanAddPortfolio);
             DeletePortfolioCommand = new RelayCommand(DeletePortfolio, CanDeletePortfolio);
             _manager = manager;
         }
 
-        private bool CanAddPortfolio(object? obj) => Name != "" && Name is not null && !Name.Contains(' ') 
+        private bool CanAddPortfolio(object? obj) => Name != "" && Name is not null && !Name.Contains(' ')
                                                         && !MainDatabaseManager.manager.NamesOfPortfolios().Contains(Name);
-        private bool CanDeletePortfolio(object? obj) => Name != "" && Name is not null && MainDatabaseManager.manager.NamesOfPortfolios().Contains(Name) 
+        private bool CanDeletePortfolio(object? obj) => Name != "" && Name is not null && MainDatabaseManager.manager.NamesOfPortfolios().Contains(Name)
                                                         && _manager.Portfolio.Name != Name;
-        
+
         private void AddPortfolio(object? obj) => new PortfolioManager(Name);
         private void DeletePortfolio(object? obj)
         {

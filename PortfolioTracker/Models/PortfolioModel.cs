@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.Identity.Client;
 
 namespace PortfolioTracker.Models
 {
@@ -14,7 +13,7 @@ namespace PortfolioTracker.Models
         public Decimal Profit { get; set; } = 0;
         public Portfolio() { }
 
-        public Portfolio(string name) 
+        public Portfolio(string name)
         {
             this.Name = name;
             this.ConnectionString = Database.ConnectionString.GetConnectionString(name);

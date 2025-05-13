@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PortfolioTracker.Models
+﻿namespace PortfolioTracker.Models
 {
     public class Company(string ticker, decimal owned, decimal buyPrice, decimal currPrice)
     {

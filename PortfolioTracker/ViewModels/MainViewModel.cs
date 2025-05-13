@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using PortfolioTracker.Commands;
 using PortfolioTracker.Database;
@@ -23,10 +17,13 @@ namespace PortfolioTracker.ViewModels
         public ObservableCollection<string> Portfolios { get; set; }
         private PortfolioManager _manager;
         private string _selectedPortfolioName;
-        public string SelectedPortfolioName {
+        public string SelectedPortfolioName
+        {
             get => _selectedPortfolioName;
-            set {
-                if (_selectedPortfolioName != value) {
+            set
+            {
+                if (_selectedPortfolioName != value)
+                {
                     _selectedPortfolioName = value;
                     ChangePortfolio(null);
                 }
@@ -58,14 +55,14 @@ namespace PortfolioTracker.ViewModels
             else if (CurrentView.Content is AddOrder) ChangeToAddOrderCommand.Execute(null);
         }
 
-        private void ChangeToOverview(object? obj) 
+        private void ChangeToOverview(object? obj)
         {
             try
             {
                 CurrentView.Content = new Overview(_manager);
-            } 
+            }
             catch { }
-         }
+        }
         private void ChangeToOrders(object? obj)
         {
             try
@@ -88,7 +85,7 @@ namespace PortfolioTracker.ViewModels
             {
                 CurrentView.Content = new AddOrder(_manager);
             }
-            catch {  }
+            catch { }
         }
         private async void ChangePortfolio(object? obj)
         {

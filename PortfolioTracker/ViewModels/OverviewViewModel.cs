@@ -1,19 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Media;
-using Flurl.Http;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Update.Internal;
 using OxyPlot;
 using OxyPlot.Series;
 using PortfolioTracker.Commands;
 using PortfolioTracker.Database;
 using PortfolioTracker.Models;
-using PortfolioTracker.Views;
 
 namespace PortfolioTracker.ViewModels
 {
@@ -29,7 +20,7 @@ namespace PortfolioTracker.ViewModels
         public Brush ProfitColor { get; set; } = Brushes.Black;
         public RelayCommand UpdateCommand { get; set; }
         public ObservableCollection<Company> Companies { get; set; }
-        public PlotModel Pie {  get; set; }
+        public PlotModel Pie { get; set; }
         public OverviewViewModel(PortfolioManager manager)
         {
             _manager = manager;

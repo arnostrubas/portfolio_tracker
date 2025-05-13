@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Markup;
+﻿using System.Collections.ObjectModel;
 using Microsoft.Win32;
 using PortfolioTracker.Commands;
 using PortfolioTracker.Database;
@@ -30,14 +23,14 @@ namespace PortfolioTracker.ViewModels
         private decimal decimalAmount;
 
         public OrderType OrderType { get => _orderType; set { _orderType = value; AddOrderCommand.RaiseCanExecuteChanged(); } }
-        public string Ticker { get => _ticker; set { _ticker = value;  AddOrderCommand.RaiseCanExecuteChanged(); } }
+        public string Ticker { get => _ticker; set { _ticker = value; AddOrderCommand.RaiseCanExecuteChanged(); } }
         public string Amount { get => _amount; set { _amount = value; AddOrderCommand.RaiseCanExecuteChanged(); } }
         public DateTime Date { get => DateTime.Parse(_date.ToString()); set { _date = DateOnly.FromDateTime(value); AddOrderCommand.RaiseCanExecuteChanged(); } }
         public string Price { get => _price; set { _price = value; AddOrderCommand.RaiseCanExecuteChanged(); } }
-        public ObservableCollection<OrderType> OrderTypes { get; set; } = new((OrderType[])Enum.GetValues(typeof(OrderType)));
+        public ObservableCollection<OrderType> OrderTypes { get; set; } = [.. (OrderType[])Enum.GetValues(typeof(OrderType))];
 
         public AddOrderViewModel(PortfolioManager manager)
-        { 
+        {
             _manager = manager;
             AddOrderCommand = new RelayCommand(AddOrder, CanAddOrder);
             ExportCommand = new RelayCommand(_ => Csv.DatabaseToCSV(_manager.Portfolio, _manager.PortfolioDatabase), _ => true);
@@ -62,7 +55,7 @@ namespace PortfolioTracker.ViewModels
         }
 
         private bool CanAddOrder(object? obj)
-        { 
+        {
             return Decimal.TryParse(_price, out decimalPrice) && decimalPrice != 0 &&
                    Decimal.TryParse(_amount, out decimalAmount) && decimalAmount > 0;
         }
@@ -73,7 +66,8 @@ namespace PortfolioTracker.ViewModels
                 Stock stock = new(_ticker, decimalPrice);
                 Order order = new(stock, (int)_orderType, decimalAmount, _date);
                 await _manager.AddOrder(order);
-            } catch { }
+            }
+            catch { }
         }
     }
 }

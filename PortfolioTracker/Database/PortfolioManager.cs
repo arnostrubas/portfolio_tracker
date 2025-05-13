@@ -1,22 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PortfolioTracker.Models;
-using System.Windows.Controls;
-using System.Windows.Navigation;
-using Microsoft.EntityFrameworkCore;
-using System.Windows.Media.Animation;
-using System.DirectoryServices;
-using System.IO;
-using PortfolioTracker.Enums;
-using System.Windows;
-using System.CodeDom;
-using PortfolioTracker.Commands;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+﻿using Microsoft.EntityFrameworkCore;
 using PortfolioTracker.API;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using PortfolioTracker.Commands;
+using PortfolioTracker.Enums;
+using PortfolioTracker.Models;
 
 namespace PortfolioTracker.Database
 {
@@ -25,13 +11,13 @@ namespace PortfolioTracker.Database
     /// </summary>
     public class PortfolioManager : IDisposable
     {
-        public Portfolio Portfolio {  get; private set; }
+        public Portfolio Portfolio { get; private set; }
         public PortfolioManagerDbContext PortfolioDatabase { get; private set; } = null!;
+        public List<Company> Companies { get; private set; } = [];
+        public Events UpdateHandler { get; set; }
 
         private readonly CancellationTokenSource cancellationTokenSource = new();
         private readonly CancellationToken cancellationToken = new();
-        public List<Company> Companies { get; private set; } = new();
-        public Events UpdateHandler { get; set; }
 
         /// <summary>
         /// Constructor for PortfolioManager
@@ -43,11 +29,13 @@ namespace PortfolioTracker.Database
             UpdateHandler = new Events();
             var exists = true;
             var existing = MainDatabaseManager.manager.Portfolios.FirstOrDefault(p => p.Name == portfolioName);
-            if (existing != null) { 
-                Portfolio = existing; 
-                PortfolioDatabase = new PortfolioManagerDbContext(ConnectionString.GetConnectionString(portfolioName)); 
+            if (existing != null)
+            {
+                Portfolio = existing;
+                PortfolioDatabase = new PortfolioManagerDbContext(ConnectionString.GetConnectionString(portfolioName));
             }
-            else {
+            else
+            {
                 this.Portfolio = new Portfolio(portfolioName);
                 exists = false;
             }
@@ -71,7 +59,7 @@ namespace PortfolioTracker.Database
             try
             {
                 await StockPrice.Price(order.Ticker);
-                if (!PortfolioDatabase.Orders.Any(o => o.Ticker == order.Ticker && o.OrderType == order.OrderType 
+                if (!PortfolioDatabase.Orders.Any(o => o.Ticker == order.Ticker && o.OrderType == order.OrderType
                                                         && o.Amount == order.Amount && o.Price == order.Price))
                 {
                     PortfolioDatabase.Orders.Add(order);
@@ -136,6 +124,7 @@ namespace PortfolioTracker.Database
                         try
                         {
                             order.CurrentPrice = await StockPrice.Price(order.Ticker);
+                            UpdateHandler.OnUpdate();
                         }
                         catch
                         {
@@ -188,16 +177,16 @@ namespace PortfolioTracker.Database
                 bool success = true;
                 foreach (var company in Companies)
                 {
-                   try
-                   {
+                    try
+                    {
                         invested += company.BuyPrice * company.Owned;
                         currentValue += company.CurrentPrice * company.Owned;
-                   }
-                   catch
-                   {
+                    }
+                    catch
+                    {
                         success = false;
                         break;
-                   }
+                    }
                 }
                 if (success)
                 {

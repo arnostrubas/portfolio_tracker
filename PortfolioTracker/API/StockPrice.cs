@@ -22,11 +22,11 @@ namespace PortfolioTracker.API
                         .Fields(Field.RegularMarketPrice)
                         .QueryAsync();
                     conversionRate = rate[currency + "USD=X"][Field.RegularMarketPrice];
-                }    
+                }
                 return (decimal)securities[ticker][Field.RegularMarketPrice] * (decimal)conversionRate;
-                
+
             }
-            catch 
+            catch
             {
                 throw new Exception("Stock doesnt exist");
             }
