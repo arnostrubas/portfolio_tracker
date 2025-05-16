@@ -110,7 +110,7 @@ namespace PortfolioTracker.Database
         /// Updates prices in the database every minute
         /// </summary>
         /// <returns>Task performing the updates</returns>
-        public async Task UpdatePrices() => await Task.Run(async () =>
+        public Task UpdatePrices() => Task.Run(async () =>
         {
             await Task.Delay(1000);
             int secondsBetweenUpdates = 60;

@@ -28,7 +28,6 @@ namespace PortfolioTracker.ViewModels
             UpdateCommand = new RelayCommand(Update, _ => true);
             UpdateCommand.Execute(null);
             _manager.UpdateHandler.Update += OnUpdate;
-            UpdatePie();
         }
         private void Update(object? obj)
         {
