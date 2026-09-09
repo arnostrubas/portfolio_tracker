@@ -1,8 +1,10 @@
-# PV178-Project
+# Portfolio Tracker
 
-This is README for simple Portfolio Tracker, which is a final project for PV178. 
+This is README for simple Portfolio Tracker
+Desktop aplication build with C# / WPF using MVVM
+Developed as an individual semester project at Faculty of Informatics, Masaryk University.
 
-SETUP GUIDE:
+## SETUP GUIDE:
 The app uses MSSQLLocalDB, which can be downloaded in VS Installer under data storage and processing (or something like that). This is the prefered setup way, but it can also be downloaded seperately.
 
 Before the first launch of the application, run PortfoliotTracker/Database/Scripts/portfolioManagerDatabaseScript.sql and save this database on (localdb)\MSSQLLocalDB (in a little popup window that should appear upon running the script. You shouldnt be required to change anything else in this window).
